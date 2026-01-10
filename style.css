@@ -103,20 +103,6 @@ button {
   margin-top: 10px;
 }
 
-
-.track {
-  margin-bottom: 1.5rem;
-}
-
-.track p {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.track audio {
-  width: 100%;
-}
-
 /* Resume */
 #resume {
   text-align: center;
@@ -233,4 +219,5 @@ footer {
     max-width: 100%;
   }
 }
+
 
