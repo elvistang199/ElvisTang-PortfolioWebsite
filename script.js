@@ -24,26 +24,3 @@ document.querySelectorAll('.project-card button').forEach(button => {
     preview.innerHTML = embed;
   });
 });
-
-
-// Toggle Music Sidebar
-const toggleBtn = document.createElement('button');
-toggleBtn.textContent = '🎵';
-toggleBtn.style.position = 'fixed';
-toggleBtn.style.top = '100px';
-toggleBtn.style.right = '0';
-toggleBtn.style.zIndex = '1000';
-toggleBtn.style.padding = '10px';
-toggleBtn.style.backgroundColor = '#007BFF';
-toggleBtn.style.color = 'white';
-toggleBtn.style.border = 'none';
-toggleBtn.style.borderRadius = '5px 0 0 5px';
-toggleBtn.style.cursor = 'pointer';
-
-document.body.appendChild(toggleBtn);
-
-const musicPanel = document.getElementById('musicPanel');
-
-toggleBtn.addEventListener('click', () => {
-  musicPanel.classList.toggle('open');
-});
