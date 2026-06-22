@@ -2,144 +2,504 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Elvis Ngoc-Phu Tang | Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Portfolio for Elvis Ngoc-Phu Tang, focused on cybersecurity, embedded systems, applied AI, and systems engineering projects."
+  />
+  <title>Elvis Ngoc-Phu Tang | Cybersecurity &amp; Embedded Systems</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23171420'/%3E%3Cpath d='M14 43 32 13l18 30H14Z' fill='%238b5cf6'/%3E%3Ccircle cx='32' cy='35' r='7' fill='%23d8b4fe'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Elvis Ngoc-Phu Tang</h1>
-      <p>Cybersecurity Enthusiast and Embedded Systems Fanatic </p>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">Menu</span>
+      </button>
+      <ul id="nav-links" class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-stage container reveal">
+      <div class="hero-copy">
+        <p class="eyebrow">Cybersecurity &middot; Embedded Systems &middot; Applied AI</p>
+        <h1>Elvis Ngoc-Phu Tang</h1>
+        <p class="hero-lede">
+          Security+ certified technologist building resilient systems across threat detection,
+          embedded hardware, automation, and applied software engineering.
+        </p>
+        <div class="hero-actions" aria-label="Portfolio actions">
+          <a class="button button-primary" href="#projects">
+            <span aria-hidden="true">&rarr;</span>
+            Explore Work
+          </a>
+          <a class="button button-secondary" href="#resume">
+            <span aria-hidden="true">&darr;</span>
+            View Resumes
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Portrait and expertise snapshot">
+        <div class="portrait-frame tilt-target">
+          <img src="ElvisTangHeadshot.png" alt="Portrait of Elvis Ngoc-Phu Tang" />
+        </div>
+        <div class="floating-badge badge-top">
+          <span>Blue-team mindset</span>
+        </div>
+        <div class="floating-badge badge-bottom">
+          <span>Hardware-aware software</span>
+        </div>
+      </div>
     </div>
   </header>
 
-  <nav>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#resume">Resume</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-
   <main>
-    <section id="about" class="container">
-      <h2>About Me</h2>
-      <div class="about-grid">
-        <img src="ElvisTangHeadshot.jpg" alt="Elvis Tang" />
+    <section id="about" class="section section-light">
+      <div class="container about-layout reveal">
+        <div class="section-kicker">Professional Summary</div>
+        <div>
+          <h2>Security and embedded systems work with hands-on engineering range.</h2>
+          <p>
+            I am a Cal Poly Pomona graduate focused on cybersecurity, embedded systems,
+            software engineering, communication systems, and control systems. My work combines
+            defensive security fundamentals with low-level technical curiosity, giving me a
+            strong foundation for SOC analysis, incident response workflows, embedded product
+            development, and system-level troubleshooting.
+          </p>
+          <p>
+            My background includes the Google Cybersecurity Professional Certificate, CompTIA
+            Security+ SY0-701, applied research experience through the STEM2 program and Cal
+            Poly Pomona, and portfolio projects spanning Azure Sentinel logging, Python SIEM
+            tooling, cryptography, autonomous vehicle tracking, processor benchmarking, and
+            haptic virtual reality hardware. I am especially interested in roles where security,
+            automation, and embedded engineering meet.
+          </p>
+        </div>
+      </div>
+
+      <div class="container expertise-strip reveal" aria-label="Core expertise">
+        <span>Threat detection</span>
+        <span>Embedded C/C++ concepts</span>
+        <span>Python automation</span>
+        <span>Security monitoring</span>
+        <span>Control systems</span>
+        <span>Applied AI systems</span>
+      </div>
+    </section>
+
+    <section id="projects" class="section section-muted">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-kicker">Selected Work</div>
+          <h2>Interactive project list</h2>
+        </div>
         <p>
-          I am a second-generation Vietnamese American, serving as a son, brother, and pet owner in a household of four, where I reside with my parents. Our family includes two cats and a turtle, and our neighborhood is home to numerous stray cats. Born in May 1998, I grew up during the early proliferation of the internet, which sparked a lifelong fascination with technology. From a young age, I demonstrated proficiency in computing, achieving a typing speed of 120 words per minute in junior high. I also explored game modification using tools like Cheat Engine, altering in-game variables—such as maximizing gold reserves in Adventure Quest—which led to my clan being labeled as "Cheaters/Abusers/Time Wasters." Additionally, I experimented with modifications in Roblox and developed a popular game in 2008, during which I corresponded with one of its creators, Builderman.
+            A cross-section of security, embedded, data, and systems projects with working
+            previews and technical depth.
         </p>
+        </div>
+
+        <div class="project-toolbar reveal" aria-label="Project filters">
+          <label class="project-search">
+            <span class="sr-only">Search projects</span>
+            <input id="project-search" type="search" placeholder="Search projects" autocomplete="off" />
+          </label>
+          <div class="filter-group" role="list" aria-label="Project category">
+            <button class="filter-button is-active" type="button" data-filter="all">All</button>
+            <button class="filter-button" type="button" data-filter="cybersecurity">Cybersecurity</button>
+            <button class="filter-button" type="button" data-filter="embedded">Embedded</button>
+            <button class="filter-button" type="button" data-filter="data">Data</button>
+            <button class="filter-button" type="button" data-filter="systems">Systems</button>
+          </div>
+          <p class="project-count" aria-live="polite"><span id="visible-count">8</span> projects showing</p>
+        </div>
+
+        <div class="project-grid">
+          <article
+            class="project-card reveal tilt-target"
+            data-category="data"
+            data-keywords="statistics data analysis car accidents severity research google document"
+          >
+            <div class="card-topline">
+              <span>Data Research</span>
+              <span>Statistical analysis</span>
+            </div>
+            <h3>Identification of Statistically Significant Factors Contributing to Severity of Car Accidents</h3>
+            <p>
+              An analytical research project focused on identifying measurable accident factors
+              and interpreting their statistical relationship to crash severity.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Statistics</span>
+              <span>Research</span>
+              <span>Data interpretation</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/13Kcccqse7Rxy8t4YL4fm_6yNRnxq70b9/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Explored factor significance and presentation of findings.</li>
+                <li>Built a report-oriented workflow for technical explanation.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="embedded"
+            data-keywords="haptic virtual reality glove embedded hardware open source sensors actuator image"
+          >
+            <div class="card-topline">
+              <span>Embedded Hardware</span>
+              <span>VR interface</span>
+            </div>
+            <h3>Open-Source Haptic Virtual Reality Gloves</h3>
+            <p>
+              A hardware-focused build exploring tactile feedback and wearable interaction for
+              virtual reality input systems.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Embedded systems</span>
+              <span>Prototyping</span>
+              <span>Haptics</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="image" data-url="VirtualRealityGlove.JPG">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Designed around physical interaction, sensing, and feedback loops.</li>
+                <li>Connected embedded design decisions to user-facing VR behavior.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="romulus authenticated encryption hash cryptography cybersecurity youtube demo"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>Cryptography</span>
+            </div>
+            <h3>ROMULUS Authenticated Encryption/Hash</h3>
+            <p>
+              A cryptography project and demo centered on authenticated encryption, hashing,
+              and secure implementation concepts.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Cryptography</span>
+              <span>Secure design</span>
+              <span>Demo build</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="youtube" data-url="https://www.youtube.com/embed/PU2H38xfZKs">
+                <span aria-hidden="true">&#9654;</span>
+                Watch
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Explained authenticated encryption and hash behavior through a demo.</li>
+                <li>Focused on practical understanding of cryptographic primitives.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="systems"
+            data-keywords="sensor fusion tracking autonomous systems unmanned ground vehicle control systems"
+          >
+            <div class="card-topline">
+              <span>Autonomous Systems</span>
+              <span>Sensor fusion</span>
+            </div>
+            <h3>Sensor Fusion Algorithms and Tracking for Autonomous Systems: Unmanned Ground Vehicle</h3>
+            <p>
+              A systems engineering project focused on tracking, sensor fusion, and autonomous
+              ground vehicle behavior.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Tracking</span>
+              <span>Control systems</span>
+              <span>Autonomy</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/16C0SkWAOaixWXygKI1bZ49nqjqinBUzm/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Applied algorithmic reasoning to autonomous vehicle sensing.</li>
+                <li>Documented system behavior and technical constraints.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="systems"
+            data-keywords="x86 amd processor silverbench benchmark computer architecture performance"
+          >
+            <div class="card-topline">
+              <span>Systems</span>
+              <span>Benchmarking</span>
+            </div>
+            <h3>Comparing the x86 to AMD Processor using SilverBench</h3>
+            <p>
+              A performance comparison project exploring processor behavior, benchmarking
+              methodology, and architecture-level tradeoffs.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Benchmarking</span>
+              <span>Architecture</span>
+              <span>Performance</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1nkBJFHga6lPgXWyWoDZJVXu1IsfbgmpyD0Tzu321YkE/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Compared performance signals from benchmark runs.</li>
+                <li>Connected observed results to processor architecture concepts.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="azure sentinel log hacker information siem soc blue team detection cloud"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>SIEM</span>
+            </div>
+            <h3>Log Hacker Information Using Azure Sentinel</h3>
+            <p>
+              A blue-team logging project using Azure Sentinel concepts to capture, organize,
+              and analyze attacker-related security telemetry.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Azure Sentinel</span>
+              <span>Logging</span>
+              <span>SOC workflow</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/17bYNnFykeZj8ItGxc_ONcyVD5hs1gM38/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Practiced security event collection and investigation structure.</li>
+                <li>Mapped cloud telemetry to analyst-friendly reporting.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="python security information event management siem scripting automation logs"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>Python SIEM</span>
+            </div>
+            <h3>Python-Security Information and Event Management</h3>
+            <p>
+              A Python-centered SIEM project that turns security log handling into a more
+              automated detection and analysis workflow.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Python</span>
+              <span>Automation</span>
+              <span>Security logs</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1HtVm1Cfu5BnNXle0SW6iQgKEWH64a4XH/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Used scripting concepts to support repeatable security analysis.</li>
+                <li>Focused on practical monitoring and event-management fundamentals.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+
+          <article
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="hybrid cryptography rsa aes encryption cybersecurity secure communication"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>Encryption</span>
+            </div>
+            <h3>Hybrid Cryptography (RSA/AES)</h3>
+            <p>
+              A secure communication project combining asymmetric and symmetric encryption
+              concepts through an RSA/AES hybrid cryptography workflow.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>RSA</span>
+              <span>AES</span>
+              <span>Secure exchange</span>
+            </div>
+            <div class="project-actions">
+              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1qvPtP4zUANW7yjLoZNlodWHatqu82Jzq/preview">
+                <span aria-hidden="true">&#9635;</span>
+                Preview
+              </button>
+              <button class="details-toggle" type="button" aria-expanded="false">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details">
+              <ul>
+                <li>Modeled key exchange and encryption responsibilities.</li>
+                <li>Demonstrated how RSA and AES complement each other in practice.</li>
+              </ul>
+            </div>
+            <div class="preview" aria-live="polite"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="resume" class="section section-light">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-kicker">Resume</div>
+          <h2>Two focused technical profiles</h2>
+        </div>
         <p>
-          In high school, I discovered my personal identity and resilience. To address prior experiences of bullying due to my slender build, I joined the wrestling team, where I formed enduring friendships that remain integral to my life. We maintain daily communication and frequently play video games together, particularly League of Legends, where I achieved a peak rank of Diamond during my most competitive phase. In recent years, I have shifted focus to casual play while exploring the card game Magic: The Gathering. My decks include a black-and-green build featuring Slimefoot, the Stowaway, and a higher-tier mono-green deck centered on Shroofus Sproutsire.
-        <p>
-          Following high school, I attended Cypress College and Fullerton College for four years to complete my general education requirements and prerequisites. During this time, I participated in the STEM2 program, which facilitated connections with industry professionals and led to a summer research internship at Cal Poly Pomona in 2019.
-        <p>
-          I transferred to Cal Poly Pomona in Fall 2019, where I pursued upper-division coursework, including electives in cybersecurity, control systems, software engineering, and communication systems. Upon graduating in Spring 2023, I specialized in cybersecurity and embedded systems. I earned the Google Cybersecurity Professional Certificate and the CompTIA Security+ (SY0-701) certification. Currently, I am preparing for entry-level roles as a SOC Analyst on a blue team or as a junior embedded systems engineer. I am also engaged in an innovative project that integrates artificial intelligence with embedded systems expertise. Having enjoyed deconstructing and reverse-engineering technologies since childhood, I am enthusiastic about the trajectory of my professional career.
+            Role-specific resumes for security operations and hardware-adjacent engineering
+            conversations.
         </p>
+        </div>
+        <div class="resume-grid">
+          <article class="resume-panel reveal">
+            <div class="resume-panel-header">
+              <h3>Cybersecurity Resume</h3>
+              <a class="text-link" href="ElvisTang_CybersecurityResume.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </div>
+            <iframe src="ElvisTang_CybersecurityResume.pdf" title="Elvis Tang cybersecurity resume"></iframe>
+          </article>
+          <article class="resume-panel reveal">
+            <div class="resume-panel-header">
+              <h3>Embedded Systems Resume</h3>
+              <a class="text-link" href="ElvisTang_EmbeddedResume.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </div>
+            <iframe src="ElvisTang_EmbeddedResume.pdf" title="Elvis Tang embedded systems resume"></iframe>
+          </article>
+        </div>
       </div>
     </section>
-    <br>
-    <br>
-    <br>
-    <br>
-    <section id="projects" class="container">
-      <h2>Projects</h2>
-      <div class="project-card">
-        <h3>Identification of Statistically Significant Factors Contributing to Severity of Car Accidents</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/13Kcccqse7Rxy8t4YL4fm_6yNRnxq70b9/preview">View Preview</button>
-        <div class="preview"></div>
+
+    <section id="contact" class="section section-dark">
+      <div class="container contact-layout reveal">
+        <div>
+          <div class="section-kicker">Contact</div>
+          <h2>Let's build, defend, debug, and ship.</h2>
+        </div>
+        <ul class="contact-list">
+          <li>
+            <span>Email</span>
+            <a href="mailto:elvistang199@gmail.com">elvistang199@gmail.com</a>
+          </li>
+          <li>
+            <span>Phone</span>
+            <a href="tel:+17143912768">1 (714) 391-2768</a>
+          </li>
+          <li>
+            <span>LinkedIn</span>
+            <a href="https://www.linkedin.com/in/elvis-np-tang/" target="_blank" rel="noopener">elvis-np-tang</a>
+          </li>
+          <li>
+            <span>GitHub</span>
+            <a href="https://github.com/elvistang199" target="_blank" rel="noopener">elvistang199</a>
+          </li>
+        </ul>
       </div>
-      <div class="project-card">
-        <h3>Open-Source Haptic Virtual Reality Gloves</h3>
-        <button data-type="image" data-url="VirtualRealityGlove.JPG">View Image</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>ROMULUS Authenticated Encryption/Hash</h3>
-        <button data-type="youtube" data-url="https://www.youtube.com/embed/PU2H38xfZKs">Watch Demo</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>Sensor Fusion Algorithms and Tracking for Autonomous Systems: Unmanned Ground Vehicle</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/16C0SkWAOaixWXygKI1bZ49nqjqinBUzm/preview">View Preview</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>Comparing the x86 to AMD Processor using SilverBench</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/1nkBJFHga6lPgXWyWoDZJVXu1IsfbgmpyD0Tzu321YkE/preview"">View Preview</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>Log Hacker Information Using Azure Sentinel</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/17bYNnFykeZj8ItGxc_ONcyVD5hs1gM38/preview">View Preview</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>Python-Security Information and Event Management</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/1HtVm1Cfu5BnNXle0SW6iQgKEWH64a4XH/preview">View Preview</button>
-        <div class="preview"></div>
-      </div>
-      <div class="project-card">
-        <h3>Hybrid Cryptography (RSA/AES)</h3>
-        <button data-type="doc" data-url="https://docs.google.com/document/d/1qvPtP4zUANW7yjLoZNlodWHatqu82Jzq/preview">View Preview</button>
-        <div class="preview"></div>
-      </div>
-    </section>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <section id="resume" class="container">
-      <h2>Cybersecurity Resume</h2>
-      <iframe src="ElvisTang_CybersecurityResume.pdf" frameborder="0"></iframe>
-      <br>
-      <br>
-      <h2>Embedded Systems Resume</h2>
-      <iframe src="ElvisTang_EmbeddedResume.pdf" frameborder="0"></iframe>
-    </section>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <section id="contact" class="container">
-      <h2>Contact</h2>
-      <ul>
-        <li><strong>Email:</strong> elvistang199@gmail.com</li>
-        <li><strong>Phone:</strong> 1(714)391-2768</li>
-        <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/elvis-np-tang/" target="_blank">elvis-np-tang</a></li>
-        <li><strong>GitHub:</strong> <a href="https://github.com/elvistang199" target="_blank">elvistang199</a></li>
-      </ul>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2026 Elvis Ngoc-Phu Tang</p>
+    <div class="container footer-inner">
+      <p>&copy; 2026 Elvis Ngoc-Phu Tang</p>
+      <a href="#top">Back to top</a>
+    </div>
   </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
