@@ -935,8 +935,8 @@ footer {
   }
 
   .hero-visual {
-    justify-self: start;
-    width: 126px;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .floating-badge {
