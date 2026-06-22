@@ -19,7 +19,8 @@ const applyProjectFilters = () => {
   let count = 0;
 
   projectCards.forEach((card) => {
-    const categoryMatch = activeFilter === "all" || card.dataset.category === activeFilter;
+    const categories = card.dataset.category.split(/\s+/);
+    const categoryMatch = activeFilter === "all" || categories.includes(activeFilter);
     const searchableText = `${card.innerText} ${card.dataset.keywords}`.toLowerCase();
     const queryMatch = !query || searchableText.includes(query);
     const shouldShow = categoryMatch && queryMatch;
