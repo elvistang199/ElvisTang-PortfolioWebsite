@@ -939,6 +939,11 @@ footer {
     width: 100%;
   }
 
+  .portrait-frame {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
   .floating-badge {
     display: none;
   }
