@@ -4,6 +4,12 @@ const searchInput = document.querySelector("#project-search");
 const visibleCount = document.querySelector("#visible-count");
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
+const musicUnlockForm = document.querySelector("#music-unlock-form");
+const musicAnswer = document.querySelector("#music-answer");
+const musicAnswerMessage = document.querySelector("#music-answer-message");
+const musicGate = document.querySelector("#music-gate");
+const musicLibrary = document.querySelector("#music-library");
+const musicLockButton = document.querySelector("#music-lock-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let activeFilter = "all";
@@ -83,7 +89,8 @@ const wireProjectInteractions = () => {
     const preview = card.querySelector(".preview");
     const title = card.querySelector("h3").textContent.trim();
 
-    previewButton.addEventListener("click", () => {
+    if (previewButton) {
+      previewButton.addEventListener("click", () => {
       const isOpen = previewButton.dataset.open === "true";
 
       if (isOpen) {
@@ -108,13 +115,88 @@ const wireProjectInteractions = () => {
       card.classList.add("has-preview");
       previewButton.dataset.open = "true";
       previewButton.lastChild.textContent = "Hide";
-    });
+      });
+    }
 
-    detailsButton.addEventListener("click", () => {
-      const isOpen = card.classList.toggle("is-open");
-      detailsButton.setAttribute("aria-expanded", String(isOpen));
-      detailsButton.lastChild.textContent = isOpen ? "Less" : "Details";
-    });
+    if (detailsButton) {
+      detailsButton.addEventListener("click", () => {
+        const isOpen = card.classList.toggle("is-open");
+        detailsButton.setAttribute("aria-expanded", String(isOpen));
+        detailsButton.lastChild.textContent = isOpen ? "Less" : "Details";
+      });
+    }
+  });
+};
+
+const setMusicVaultState = (isUnlocked, announce = false) => {
+  musicGate.hidden = isUnlocked;
+  musicLibrary.hidden = !isUnlocked;
+
+  if (announce) {
+    musicAnswerMessage.classList.remove("is-error");
+    musicAnswerMessage.classList.add("is-success");
+    musicAnswerMessage.textContent = "Correct. Opening the music vault…";
+  }
+};
+
+const digestAnswer = async (answer) => {
+  const answerBytes = new TextEncoder().encode(answer);
+  const digest = await crypto.subtle.digest("SHA-256", answerBytes);
+  return [...new Uint8Array(digest)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+};
+
+const wireMusicVault = () => {
+  if (!musicUnlockForm) {
+    return;
+  }
+
+  const unlockedForSession = sessionStorage.getItem("music-vault-unlocked") === "true";
+  setMusicVaultState(unlockedForSession);
+
+  musicUnlockForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const normalizedAnswer = musicAnswer.value.trim().toLowerCase();
+
+    if (!normalizedAnswer) {
+      musicAnswer.setAttribute("aria-invalid", "true");
+      musicAnswerMessage.className = "music-answer-message is-error";
+      musicAnswerMessage.textContent = "Enter an answer to try the lock.";
+      musicAnswer.focus();
+      return;
+    }
+
+    const answerDigest = await digestAnswer(normalizedAnswer);
+    const isCorrect =
+      answerDigest === "8d2ac8b58ead9744d77286de9b0bcb7a894f238c3149fc9f3b1e3caff36330fe";
+
+    if (!isCorrect) {
+      musicAnswer.setAttribute("aria-invalid", "true");
+      musicAnswerMessage.className = "music-answer-message is-error";
+      musicAnswerMessage.textContent = "That did not open it. Try another answer.";
+      musicAnswer.select();
+      return;
+    }
+
+    musicAnswer.removeAttribute("aria-invalid");
+    sessionStorage.setItem("music-vault-unlocked", "true");
+    setMusicVaultState(true, true);
+  });
+
+  musicAnswer.addEventListener("input", () => {
+    musicAnswer.removeAttribute("aria-invalid");
+    musicAnswerMessage.className = "music-answer-message";
+    musicAnswerMessage.textContent = "";
+  });
+
+  musicLockButton.addEventListener("click", () => {
+    sessionStorage.removeItem("music-vault-unlocked");
+    musicAnswer.value = "";
+    musicAnswerMessage.className = "music-answer-message";
+    musicAnswerMessage.textContent = "";
+    setMusicVaultState(false);
+    musicAnswer.focus();
   });
 };
 
@@ -222,6 +304,7 @@ window.addEventListener("scroll", updateScrollProgress, { passive: true });
 window.addEventListener("resize", updateScrollProgress);
 
 wireProjectInteractions();
+wireMusicVault();
 wireTiltEffects();
 wireRevealEffects();
 wireNavState();

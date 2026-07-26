@@ -122,11 +122,58 @@
             <button class="filter-button" type="button" data-filter="embedded">Embedded</button>
             <button class="filter-button" type="button" data-filter="data">Data</button>
             <button class="filter-button" type="button" data-filter="systems">Systems</button>
+            <button class="filter-button" type="button" data-filter="music">Music</button>
           </div>
-          <p class="project-count" aria-live="polite"><span id="visible-count">8</span> projects showing</p>
+          <p class="project-count" aria-live="polite"><span id="visible-count">9</span> projects showing</p>
         </div>
 
         <div class="project-grid">
+          <article
+            class="project-card music-project reveal"
+            data-category="music"
+            data-keywords="music audio songs tracks original creative work blue green money vault"
+          >
+            <div class="music-vault" id="music-vault">
+              <div class="music-gate" id="music-gate">
+                <h3>What turns blue and fades to green?</h3>
+                <form class="music-unlock-form" id="music-unlock-form" novalidate>
+                  <label class="sr-only" for="music-answer">Your answer</label>
+                  <input
+                    id="music-answer"
+                    name="answer"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="Type your answer"
+                    aria-describedby="music-answer-message"
+                    required
+                  />
+                  <button type="submit">
+                    Unlock music
+                    <span aria-hidden="true">&rarr;</span>
+                  </button>
+                </form>
+                <p class="music-answer-message" id="music-answer-message" aria-live="polite"></p>
+              </div>
+
+              <div class="music-library" id="music-library" hidden>
+                <div class="music-library-actions">
+                  <button class="music-lock-button" id="music-lock-button" type="button">
+                    Lock
+                  </button>
+                </div>
+                <article class="music-track">
+                  <div class="music-track-info">
+                    <h4>B@BY</h4>
+                    <audio controls controlslist="nodownload" preload="none" aria-label="Play B@BY">
+                      <source src="assets/music/BABY.mp3" type="audio/mpeg" />
+                      Your browser does not support the audio player.
+                    </audio>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </article>
+
           <article
             class="project-card reveal tilt-target"
             data-category="data"
