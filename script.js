@@ -46,11 +46,15 @@ const closePreview = (card) => {
   const preview = card.querySelector(".preview");
   const button = card.querySelector(".preview-toggle");
 
-  preview.replaceChildren();
+  if (preview) {
+    preview.replaceChildren();
+  }
+
   card.classList.remove("has-preview");
 
   if (button) {
     button.dataset.open = "false";
+    button.setAttribute("aria-expanded", "false");
     button.lastChild.textContent = button.dataset.type === "youtube" ? "Watch" : "Preview";
   }
 };
@@ -91,30 +95,31 @@ const wireProjectInteractions = () => {
 
     if (previewButton) {
       previewButton.addEventListener("click", () => {
-      const isOpen = previewButton.dataset.open === "true";
+        const isOpen = previewButton.dataset.open === "true";
 
-      if (isOpen) {
-        closePreview(card);
-        return;
-      }
-
-      projectCards.forEach((otherCard) => {
-        if (otherCard !== card) {
-          closePreview(otherCard);
+        if (isOpen) {
+          closePreview(card);
+          return;
         }
-      });
 
-      preview.replaceChildren(
-        buildPreview({
-          type: previewButton.dataset.type,
-          url: previewButton.dataset.url,
-          title,
-        })
-      );
+        projectCards.forEach((otherCard) => {
+          if (otherCard !== card) {
+            closePreview(otherCard);
+          }
+        });
 
-      card.classList.add("has-preview");
-      previewButton.dataset.open = "true";
-      previewButton.lastChild.textContent = "Hide";
+        preview.replaceChildren(
+          buildPreview({
+            type: previewButton.dataset.type,
+            url: previewButton.dataset.url,
+            title,
+          })
+        );
+
+        card.classList.add("has-preview");
+        previewButton.dataset.open = "true";
+        previewButton.setAttribute("aria-expanded", "true");
+        previewButton.lastChild.textContent = "Hide";
       });
     }
 
