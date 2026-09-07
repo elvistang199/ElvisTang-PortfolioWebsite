@@ -10,6 +10,27 @@ const musicAnswerMessage = document.querySelector("#music-answer-message");
 const musicGate = document.querySelector("#music-gate");
 const musicLibrary = document.querySelector("#music-library");
 const musicLockButton = document.querySelector("#music-lock-button");
+const musicDialog = document.querySelector("#music-dialog");
+const musicTrigger = document.querySelector("#music-trigger");
+
+musicTrigger.addEventListener("click", () => {
+  musicDialog.showModal();
+  document.body.classList.add("music-dialog-open");
+});
+
+musicDialog.querySelector(".music-dialog-close").addEventListener("click", () => musicDialog.close());
+musicDialog.addEventListener("click", (event) => {
+  const bounds = musicDialog.getBoundingClientRect();
+  if (event.target === musicDialog && (
+    event.clientX < bounds.left || event.clientX > bounds.right ||
+    event.clientY < bounds.top || event.clientY > bounds.bottom
+  )) musicDialog.close();
+});
+musicDialog.addEventListener("close", () => {
+  musicDialog.querySelectorAll("audio").forEach((audio) => audio.pause());
+  document.body.classList.remove("music-dialog-open");
+  musicTrigger.focus();
+});
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let activeFilter = "all";

@@ -106,8 +106,8 @@
           <h2>Interactive project list</h2>
         </div>
         <p>
-            A cross-section of security, embedded, data, and systems projects with working
-            previews and technical depth.
+            A cross-section of security, embedded, data, and systems projects with downloadable
+            reports, demos, and technical depth.
         </p>
         </div>
 
@@ -122,57 +122,13 @@
             <button class="filter-button" type="button" data-filter="embedded">Embedded</button>
             <button class="filter-button" type="button" data-filter="data">Data</button>
             <button class="filter-button" type="button" data-filter="systems">Systems</button>
-            <button class="filter-button" type="button" data-filter="music">Music</button>
           </div>
-          <p class="project-count" aria-live="polite"><span id="visible-count">9</span> projects showing</p>
+          <p class="project-count" aria-live="polite"><span id="visible-count">8</span> projects showing</p>
         </div>
 
         <div class="project-grid">
-          <article
-            class="project-card music-project reveal"
-            data-category="music"
-            data-keywords="music audio songs tracks original creative work blue green money vault"
-          >
-            <div class="music-vault" id="music-vault">
-              <div class="music-gate" id="music-gate">
-                <h3>What turns blue and fades to green?</h3>
-                <form class="music-unlock-form" id="music-unlock-form" novalidate>
-                  <label class="sr-only" for="music-answer">Your answer</label>
-                  <input
-                    id="music-answer"
-                    name="answer"
-                    type="password"
-                    autocomplete="off"
-                    placeholder="Type your answer"
-                    aria-describedby="music-answer-message"
-                    required
-                  />
-                  <button type="submit">
-                    Unlock music
-                    <span aria-hidden="true">&rarr;</span>
-                  </button>
-                </form>
-                <p class="music-answer-message" id="music-answer-message" aria-live="polite"></p>
-              </div>
 
-              <div class="music-library" id="music-library" hidden>
-                <div class="music-library-actions">
-                  <button class="music-lock-button" id="music-lock-button" type="button">
-                    Lock
-                  </button>
-                </div>
-                <article class="music-track">
-                  <div class="music-track-info">
-                    <h4>B@BY</h4>
-                    <audio controls controlslist="nodownload" preload="none" aria-label="Play B@BY">
-                      <source src="assets/music/BABY.mp3" type="audio/mpeg" />
-                      Your browser does not support the audio player.
-                    </audio>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </article>
+
 
           <article
             class="project-card reveal tilt-target"
@@ -194,10 +150,10 @@
               <span>Data interpretation</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/13Kcccqse7Rxy8t4YL4fm_6yNRnxq70b9/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/car-accident-severity.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -212,43 +168,6 @@
             <div class="preview" aria-live="polite"></div>
           </article>
 
-          <article
-            class="project-card reveal tilt-target"
-            data-category="embedded"
-            data-keywords="haptic virtual reality glove embedded hardware open source sensors actuator image"
-          >
-            <div class="card-topline">
-              <span>Embedded Hardware</span>
-              <span>VR interface</span>
-            </div>
-            <h3>Open-Source Haptic Virtual Reality Gloves</h3>
-            <p>
-              A hardware-focused build exploring tactile feedback and wearable interaction for
-              virtual reality input systems.
-            </p>
-            <div class="tag-row" aria-label="Project skills">
-              <span>Embedded systems</span>
-              <span>Prototyping</span>
-              <span>Haptics</span>
-            </div>
-            <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="image" data-url="VirtualRealityGlove.JPG">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
-              <button class="details-toggle" type="button" aria-expanded="false">
-                <span aria-hidden="true">+</span>
-                Details
-              </button>
-            </div>
-            <div class="project-details">
-              <ul>
-                <li>Designed around physical interaction, sensing, and feedback loops.</li>
-                <li>Connected embedded design decisions to user-facing VR behavior.</li>
-              </ul>
-            </div>
-            <div class="preview" aria-live="polite"></div>
-          </article>
 
           <article
             class="project-card reveal tilt-target"
@@ -309,10 +228,10 @@
               <span>Autonomy</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/16C0SkWAOaixWXygKI1bZ49nqjqinBUzm/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/sensor-fusion-ugv.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -347,10 +266,10 @@
               <span>Performance</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1nkBJFHga6lPgXWyWoDZJVXu1IsfbgmpyD0Tzu321YkE/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/processor-benchmark.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -385,10 +304,10 @@
               <span>SOC workflow</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/17bYNnFykeZj8ItGxc_ONcyVD5hs1gM38/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/azure-sentinel.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -423,10 +342,10 @@
               <span>Security logs</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1HtVm1Cfu5BnNXle0SW6iQgKEWH64a4XH/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/python-siem.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -461,10 +380,10 @@
               <span>Secure exchange</span>
             </div>
             <div class="project-actions">
-              <button class="preview-toggle" type="button" data-type="doc" data-url="https://docs.google.com/document/d/1qvPtP4zUANW7yjLoZNlodWHatqu82Jzq/preview">
-                <span aria-hidden="true">&#9635;</span>
-                Preview
-              </button>
+              <a class="button" href="assets/reports/hybrid-cryptography.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
               <button class="details-toggle" type="button" aria-expanded="false">
                 <span aria-hidden="true">+</span>
                 Details
@@ -477,6 +396,49 @@
               </ul>
             </div>
             <div class="preview" aria-live="polite"></div>
+          </article>
+          <article
+            id="soc-homelab"
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="soc homelab wireshark network traffic investigation packet analysis tcpdump nmap ubuntu windows powershell dns icmp tcp http tls shared nat endpoint process correlation event viewer"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>SOC investigation</span>
+            </div>
+            <h3>Wireshark Network Traffic Investigation — SOC Homelab</h3>
+            <p>
+              A hands-on SOC investigation using Ubuntu and Windows virtual machines on a
+              Mac-hosted Shared NAT network. Captured and analyzed network traffic, correlated
+              Windows connections with processes, and documented findings across 34 screenshots.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Wireshark</span>
+              <span>tcpdump</span>
+              <span>Nmap</span>
+              <span>PowerShell</span>
+              <span>Packet analysis</span>
+            </div>
+            <div class="project-actions">
+              <a class="button" href="assets/reports/soc-homelab.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
+              <button class="details-toggle" type="button" aria-expanded="false" aria-controls="soc-homelab-details">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details" id="soc-homelab-details">
+              <ul>
+                <li>Isolated ICMP, DNS, TCP, HTTP, and TLS traffic, including an HTTP-to-HTTPS redirect and TLS 1.3 session metadata.</li>
+                <li>Linked Windows connection-owner PIDs to Widgets and svchost and reviewed Security Event ID 4672 for a SYSTEM logon.</li>
+                <li>Correlated authorized Nmap scans with TCP SYN probes in Wireshark; all 1,000 scanned Windows TCP ports returned filtered/no-response results.</li>
+                <li>Documented NAT visibility and encrypted-payload limitations without making unsupported claims of malicious activity.</li>
+                <li>In progress: controlled Windows application traffic, additional event correlation, and remaining process attribution.</li>
+              </ul>
+            </div>
           </article>
         </div>
       </div>
@@ -517,7 +479,7 @@
       <div class="container contact-layout reveal">
         <div>
           <div class="section-kicker">Contact</div>
-          <h2>Let's build, defend, debug, and ship.</h2>
+          <h2>Let's build, defend, debug, and ship<button class="music-trigger" id="music-trigger" type="button" aria-label="Open music vault" aria-haspopup="dialog" aria-controls="music-dialog">.</button></h2>
         </div>
         <ul class="contact-list">
           <li>
@@ -547,6 +509,49 @@
       <a href="#top">Back to top</a>
     </div>
   </footer>
+
+  <dialog id="music-dialog" class="music-project music-dialog" aria-label="Music vault">
+    <button class="music-dialog-close" type="button" aria-label="Close music vault" autofocus>&times;</button>
+            <div class="music-vault" id="music-vault">
+              <div class="music-gate" id="music-gate">
+                <h3>What turns blue and fades to green?</h3>
+                <form class="music-unlock-form" id="music-unlock-form" novalidate>
+                  <label class="sr-only" for="music-answer">Your answer</label>
+                  <input
+                    id="music-answer"
+                    name="answer"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="Type your answer"
+                    aria-describedby="music-answer-message"
+                    required
+                  />
+                  <button type="submit">
+                    Unlock music
+                    <span aria-hidden="true">&rarr;</span>
+                  </button>
+                </form>
+                <p class="music-answer-message" id="music-answer-message" aria-live="polite"></p>
+              </div>
+
+              <div class="music-library" id="music-library" hidden>
+                <div class="music-library-actions">
+                  <button class="music-lock-button" id="music-lock-button" type="button">
+                    Lock
+                  </button>
+                </div>
+                <article class="music-track">
+                  <div class="music-track-info">
+                    <h4>B@BY</h4>
+                    <audio controls controlslist="nodownload" preload="none" aria-label="Play B@BY">
+                      <source src="assets/music/BABY.mp3" type="audio/mpeg" />
+                      Your browser does not support the audio player.
+                    </audio>
+                  </div>
+                </article>
+              </div>
+            </div>
+  </dialog>
 
   <script src="script.js"></script>
 </body>

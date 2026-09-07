@@ -559,6 +559,53 @@ button {
   display: none;
 }
 
+.music-trigger {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.08em;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.music-trigger:hover,
+.music-trigger:focus-visible {
+  color: #52e49b;
+}
+
+body.music-dialog-open {
+  overflow: hidden;
+}
+
+.music-dialog {
+  width: min(800px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  overflow-y: auto;
+  border: 1px solid;
+  border-radius: var(--radius);
+}
+
+.music-dialog::backdrop {
+  background: rgba(4, 10, 20, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.music-dialog-close {
+  display: block;
+  width: 44px;
+  height: 44px;
+  margin: -12px -12px 12px auto;
+  border: 1px solid rgba(95, 194, 194, 0.35);
+  border-radius: 50%;
+  color: #eefcff;
+  background: rgba(3, 18, 29, 0.68);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
 .music-project {
   grid-column: 1 / -1;
   min-height: 0;
@@ -764,13 +811,15 @@ button {
   padding-top: 22px;
 }
 
-.project-actions button {
+.project-actions button,
+.project-actions a {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.76);
   border: 1px solid rgba(31, 27, 42, 0.12);
 }
 
-.project-actions button:first-child {
+.project-actions button:first-child,
+.project-actions a:first-child {
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   border-color: transparent;
@@ -1064,6 +1113,7 @@ footer {
   }
 
   .nav-links {
+    visibility: hidden;
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
@@ -1083,6 +1133,7 @@ footer {
   }
 
   .nav-links.is-open {
+    visibility: visible;
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
@@ -1150,6 +1201,25 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .music-dialog {
+    padding: 16px;
+    max-height: calc(100dvh - 24px);
+  }
+
+  .music-vault {
+    min-width: 0;
+    padding: 18px;
+  }
+
+  .music-track {
+    padding: 12px;
+    min-width: 0;
+  }
+
+  .music-dialog-close {
+    margin: 0 0 12px auto;
+  }
+
   .music-unlock-form button {
     width: 100%;
   }
@@ -1209,5 +1279,47 @@ footer {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Keep long project names and controls inside narrow phone and tablet layouts. */
+.project-card,
+.resume-panel,
+.contact-layout > *,
+.project-toolbar > * {
+  min-width: 0;
+}
+
+.project-card h3,
+.contact-list a {
+  overflow-wrap: anywhere;
+}
+
+@media (pointer: coarse), (max-width: 960px) {
+  .button,
+  .filter-button,
+  .project-actions button,
+  .music-lock-button {
+    min-height: 44px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) {
+  .project-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .project-count {
+    text-align: left;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-actions {
+    grid-template-columns: 1fr;
   }
 }
