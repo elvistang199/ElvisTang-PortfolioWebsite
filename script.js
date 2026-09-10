@@ -13,11 +13,35 @@ const musicStatus = document.querySelector("#music-status");
 let musicPlaylist = [{ title: "B@BY", src: "assets/music/BABY.mp3" }];
 let musicIndex = 0;
 let musicRequest = 0;
+let musicVolumeLevel = 70;
+let musicGain;
+let musicSource;
+let musicAudioContext;
+// Route hosted playback through gain so touch volume also works on iOS.
+const prepareMusicAudio = () => {
+  const Context = window.AudioContext || window.webkitAudioContext;
+  if (!Context || window.location.protocol === "file:") return;
+  try {
+    musicAudioContext ||= new Context();
+    if (!musicSource) {
+      musicGain = musicAudioContext.createGain();
+      musicGain.gain.value = musicVolumeLevel / 100;
+      musicSource = musicAudioContext.createMediaElementSource(musicAudio);
+      musicSource.connect(musicGain);
+      musicGain.connect(musicAudioContext.destination);
+      musicAudio.volume = 1;
+    }
+    if (musicAudioContext.state !== "running") musicAudioContext.resume().catch(() => {});
+  } catch { /* Keep native playback available when Web Audio is unavailable. */ }
+};
 const musicVolume = document.querySelector("#music-volume");
 const musicVolumeValue = document.querySelector("#music-volume-value");
 const setMusicVolume = (value) => {
   const volume = Math.max(0, Math.min(100, value));
-  musicAudio.volume = volume / 100;
+  musicVolumeLevel = volume;
+  if (musicGain && musicSource) {
+    musicGain.gain.setTargetAtTime(volume / 100, musicAudioContext.currentTime, 0.015);
+  } else musicAudio.volume = volume / 100;
   musicVolume.style.setProperty("--knob-angle", `${volume * 2.7 - 135}deg`);
   musicVolume.setAttribute("aria-valuenow", String(Math.round(volume)));
   musicVolume.setAttribute("aria-valuetext", `${Math.round(volume)} percent`);
@@ -35,15 +59,30 @@ musicVolume.addEventListener("pointerdown", (event) => {
   event.preventDefault();
   musicVolume.focus({ preventScroll: true });
   musicVolume.setPointerCapture(event.pointerId);
-  volumeDrag = { id: event.pointerId, angle: volumePointerAngle(event) };
+  prepareMusicAudio();
+  const bounds = musicVolume.getBoundingClientRect();
+  const radius = Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2);
+  volumeDrag = { id: event.pointerId, angle: volumePointerAngle(event), y: event.clientY,
+    mode: radius < bounds.width * 0.3 ? "vertical" : "rotary" };
   musicVolume.classList.add("is-turning");
 });
 musicVolume.addEventListener("pointermove", (event) => {
   if (!volumeDrag || volumeDrag.id !== event.pointerId) return;
+  if (volumeDrag.mode === "vertical") {
+    setMusicVolume(musicVolumeLevel + (volumeDrag.y - event.clientY) * 0.7);
+    volumeDrag.y = event.clientY;
+    return;
+  }
+  const bounds = musicVolume.getBoundingClientRect();
+  if (Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2) < 8) {
+    volumeDrag.angle = null;
+    return;
+  }
   const angle = volumePointerAngle(event);
+  if (volumeDrag.angle === null) { volumeDrag.angle = angle; return; }
   // Normalize across the bottom seam so a full turn never jumps in volume.
   const delta = ((angle - volumeDrag.angle + 540) % 360) - 180;
-  setMusicVolume(musicAudio.volume * 100 + delta / 2.7);
+  setMusicVolume(musicVolumeLevel + delta / 2.7);
   volumeDrag.angle = angle;
 });
 const stopVolumeDrag = () => {
@@ -57,7 +96,7 @@ musicVolume.addEventListener("keydown", (event) => {
   const steps = { ArrowUp: 5, ArrowRight: 5, ArrowDown: -5, ArrowLeft: -5, PageUp: 10, PageDown: -10 };
   if (event.key === "Home" || event.key === "End" || event.key in steps) {
     event.preventDefault();
-    setMusicVolume(event.key === "Home" ? 0 : event.key === "End" ? 100 : musicAudio.volume * 100 + steps[event.key]);
+    setMusicVolume(event.key === "Home" ? 0 : event.key === "End" ? 100 : musicVolumeLevel + steps[event.key]);
   }
 });
 let boomboxSoundContext;
@@ -84,7 +123,7 @@ const clickBoomboxButton = async () => {
     const source = context.createBufferSource();
     const gain = context.createGain();
     source.buffer = buffer;
-    gain.gain.value = 0.45 * musicAudio.volume;
+    gain.gain.value = 0.45 * musicVolumeLevel / 100;
     source.connect(gain);
     gain.connect(context.destination);
     source.onended = () => { source.disconnect(); gain.disconnect(); };
@@ -122,6 +161,7 @@ fetch("assets/music/playlist.json")
   .catch(() => { /* Keep the bundled song available if the playlist cannot load. */ });
 
 const playMusic = async () => {
+  prepareMusicAudio();
   const request = ++musicRequest;
   musicStatus.textContent = "Loading…";
   try {
