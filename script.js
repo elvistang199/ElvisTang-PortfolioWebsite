@@ -13,6 +13,89 @@ const musicStatus = document.querySelector("#music-status");
 let musicPlaylist = [{ title: "B@BY", src: "assets/music/BABY.mp3" }];
 let musicIndex = 0;
 let musicRequest = 0;
+const musicVolume = document.querySelector("#music-volume");
+const musicVolumeValue = document.querySelector("#music-volume-value");
+const setMusicVolume = (value) => {
+  const volume = Math.max(0, Math.min(100, value));
+  musicAudio.volume = volume / 100;
+  musicVolume.style.setProperty("--knob-angle", `${volume * 2.7 - 135}deg`);
+  musicVolume.setAttribute("aria-valuenow", String(Math.round(volume)));
+  musicVolume.setAttribute("aria-valuetext", `${Math.round(volume)} percent`);
+  musicVolumeValue.textContent = `${Math.round(volume)}%`;
+};
+setMusicVolume(70);
+let volumeDrag = null;
+const volumePointerAngle = (event) => {
+  const bounds = musicVolume.getBoundingClientRect();
+  return Math.atan2(event.clientX - bounds.left - bounds.width / 2,
+    bounds.top + bounds.height / 2 - event.clientY) * 180 / Math.PI;
+};
+musicVolume.addEventListener("pointerdown", (event) => {
+  if (!event.isPrimary || event.button !== 0) return;
+  event.preventDefault();
+  musicVolume.focus({ preventScroll: true });
+  musicVolume.setPointerCapture(event.pointerId);
+  volumeDrag = { id: event.pointerId, angle: volumePointerAngle(event) };
+  musicVolume.classList.add("is-turning");
+});
+musicVolume.addEventListener("pointermove", (event) => {
+  if (!volumeDrag || volumeDrag.id !== event.pointerId) return;
+  const angle = volumePointerAngle(event);
+  // Normalize across the bottom seam so a full turn never jumps in volume.
+  const delta = ((angle - volumeDrag.angle + 540) % 360) - 180;
+  setMusicVolume(musicAudio.volume * 100 + delta / 2.7);
+  volumeDrag.angle = angle;
+});
+const stopVolumeDrag = () => {
+  volumeDrag = null;
+  musicVolume.classList.remove("is-turning");
+};
+musicVolume.addEventListener("pointerup", stopVolumeDrag);
+musicVolume.addEventListener("pointercancel", stopVolumeDrag);
+musicVolume.addEventListener("lostpointercapture", stopVolumeDrag);
+musicVolume.addEventListener("keydown", (event) => {
+  const steps = { ArrowUp: 5, ArrowRight: 5, ArrowDown: -5, ArrowLeft: -5, PageUp: 10, PageDown: -10 };
+  if (event.key === "Home" || event.key === "End" || event.key in steps) {
+    event.preventDefault();
+    setMusicVolume(event.key === "Home" ? 0 : event.key === "End" ? 100 : musicAudio.volume * 100 + steps[event.key]);
+  }
+});
+let boomboxSoundContext;
+
+// A brief spring-and-latch clack, synthesized locally on a button gesture.
+const clickBoomboxButton = async () => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    boomboxSoundContext ||= new AudioContext();
+    const context = boomboxSoundContext;
+    if (context.state === "suspended") await context.resume();
+    if (context.state !== "running") return;
+    const duration = 0.095;
+    const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * duration), context.sampleRate);
+    const samples = buffer.getChannelData(0);
+    for (let i = 0; i < samples.length; i++) {
+      const t = i / context.sampleRate;
+      const latch = Math.exp(-t * 180);
+      const release = t >= 0.028 ? 0.6 * Math.exp(-(t - 0.028) * 140) : 0;
+      samples[i] = (Math.random() * 2 - 1) * (latch + release) * 0.3
+        + Math.sin(2 * Math.PI * 170 * t) * Math.exp(-t * 65) * 0.22;
+    }
+    const source = context.createBufferSource();
+    const gain = context.createGain();
+    source.buffer = buffer;
+    gain.gain.value = 0.45 * musicAudio.volume;
+    source.connect(gain);
+    gain.connect(context.destination);
+    source.onended = () => { source.disconnect(); gain.disconnect(); };
+    source.start();
+  } catch {
+    // Sound effects must never prevent the music controls from working.
+  }
+};
+musicDialog.querySelectorAll("button").forEach((button) => {
+  button.addEventListener("click", clickBoomboxButton);
+});
 
 const updateMusicTrack = () => {
   document.querySelector("#music-title").textContent = musicPlaylist[musicIndex].title;
@@ -66,13 +149,13 @@ musicPlay.addEventListener("click", () => {
 musicNext.addEventListener("click", nextMusic);
 musicAudio.addEventListener("ended", nextMusic);
 musicAudio.addEventListener("play", () => {
-  musicPlay.innerHTML = '<span aria-hidden="true">Ⅱ</span> Pause';
+  musicPlay.innerHTML = '<span aria-hidden="true">Ⅱ</span>';
   musicPlay.setAttribute("aria-label", "Pause");
   musicDialog.classList.add("is-playing");
 });
 musicAudio.addEventListener("playing", () => { musicStatus.textContent = "Now playing"; });
 musicAudio.addEventListener("pause", () => {
-  musicPlay.innerHTML = '<span aria-hidden="true">▶</span> Play';
+  musicPlay.innerHTML = '<span aria-hidden="true">▶</span>';
   musicPlay.setAttribute("aria-label", "Play");
   musicStatus.textContent = "Paused";
   musicDialog.classList.remove("is-playing");

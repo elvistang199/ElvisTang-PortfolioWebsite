@@ -560,9 +560,8 @@ button {
 }
 
 .music-trigger {
-  min-width: 44px;
   min-height: 44px;
-  padding: 0 0.08em;
+  padding: 0;
   border: 0;
   color: inherit;
   background: transparent;
@@ -579,7 +578,7 @@ button {
   position: fixed;
   inset: auto 0 max(18px, env(safe-area-inset-bottom));
   z-index: 1000;
-  width: min(580px, calc(100% - 24px));
+  width: min(640px, calc(100% - 24px));
   max-height: calc(100dvh - 36px);
   margin: 0 auto;
   padding: 22px 0 0;
@@ -589,19 +588,21 @@ button {
   background: transparent;
 }
 .boombox-handle {
-  width: 44%;
-  height: 24px;
+  width: 78%;
+  height: 36px;
   margin: 0 auto -2px;
-  border: 7px solid #536276;
+  border: 9px solid #252a30;
+  box-shadow: inset 0 2px 1px #a4a9ac, 0 -1px 0 #71777e;
   border-bottom: 0;
   border-radius: 12px 12px 0 0;
 }
 .boombox {
   padding: 14px 18px 22px;
-  border: 2px solid #556779;
-  border-radius: 20px;
-  background: linear-gradient(150deg, #344354, #17232f 45%, #0c1721);
-  box-shadow: inset 0 2px 0 #ffffff30, 0 12px 30px #0008;
+  position: relative;
+  border: 3px solid #24282d;
+  border-radius: 5px;
+  background: repeating-linear-gradient(0deg, #ffffff18 0 1px, transparent 1px 3px), linear-gradient(115deg, #e0e1de, #8a9196 20%, #d9dcda 52%, #939ba0 83%, #e5e6e2);
+  box-shadow: inset 0 2px 1px #d2d6d780, inset 0 -5px 2px #111820, 0 12px 30px #0008;
 }
 .boombox-header {
   display: flex;
@@ -611,25 +612,83 @@ button {
   font-weight: 800;
   letter-spacing: 0.12em;
 }
-.boombox-stereo { margin-left: 10px; color: #9dafc0; font-size: 0.75rem; }
 .music-dialog-close {
   width: 44px;
   height: 44px;
   border: 0;
   border-radius: 50%;
   color: #eefcff;
-  background: #ffffff0c;
+  background: linear-gradient(#626a71, #2d343b);
+  box-shadow: inset 0 1px 1px #ffffff60, 0 3px 0 #10151b;
   font-size: 1.6rem;
   cursor: pointer;
 }
-.boombox-body { display: grid; grid-template-columns: 1fr 1.65fr 1fr; gap: 16px; align-items: center; }
+.boombox-body { display: grid; grid-template-columns: 1.2fr 1.4fr 1.2fr; gap: 16px; align-items: center; }
 .boombox-speaker {
+  position: relative;
   aspect-ratio: 1;
-  border: 5px solid #0c141e;
+  border: 7px solid #1a1d21;
   border-radius: 50%;
-  background: radial-gradient(circle, #263848 0 20%, #080f18 21% 25%, transparent 26%), repeating-radial-gradient(circle, #172330 0 2px, #090f18 3px 5px);
-  box-shadow: 0 0 0 2px #506070, inset 0 0 12px #000;
+  background: radial-gradient(circle at 43% 38%, #4c5359 0, #1c2025 24%, #090c10 25% 29%, #333940 30%, #171b20 52%, #06090c 55% 61%, #30353a 64%, #12171c 70%);
+  box-shadow: 0 0 0 2px #74797d, 0 0 0 5px #24292e, inset 0 4px 9px #000, 0 6px 8px #0009;
 }
+.boombox-speaker::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border: 5px solid transparent;
+  border-radius: 50%;
+  background: conic-gradient(#70e8af, #91f7d4, #6da7f5, #b489e9, #f080b5, #70e8af) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.45;
+}
+.is-playing .boombox-speaker::before { opacity: 1; filter: drop-shadow(0 0 4px #88eacb); }
+.boombox-volume { display: flex; align-items: center; gap: 12px; }
+.boombox-volume-label { display: grid; gap: 3px; color: #263039; font: 700 0.7rem monospace; letter-spacing: 0.08em; }
+.boombox-volume-label output { font-weight: 400; font-variant-numeric: tabular-nums; }
+.boombox-knob {
+  --knob-angle: 54deg;
+  position: relative;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border: 2px solid #363e44;
+  border-radius: 50%;
+  background: repeating-conic-gradient(#747e86 0deg 4deg, #d8dcd9 4deg 8deg);
+  box-shadow: 0 3px 0 #30383f, 0 5px 6px #0007, 0 0 0 2px #e9eae5;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.boombox-knob span {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #e4e7e6;
+  border-radius: 50%;
+  background: conic-gradient(from 30deg, #dbe0e0, #8b969e, #f4f4ed, #8d979f, #dbe0e0);
+  box-shadow: inset 0 0 4px #ffffff80;
+  transform: rotate(var(--knob-angle));
+  pointer-events: none;
+}
+.boombox-knob span::after { content: ""; position: absolute; top: 3px; left: calc(50% - 2px); width: 4px; height: 11px; border-radius: 1px; background: #222e36; box-shadow: 1px 0 0 #fff8; }
+.boombox-knob.is-turning { cursor: grabbing; }
+.boombox-knob:focus-visible { outline: 3px solid #164e73; outline-offset: 5px; }
+.boombox-speaker::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, #050709cc 1px, transparent 1.6px) 0 0 / 4px 4px;
+  box-shadow: inset 0 1px 2px #ffffff40;
+}
+.boombox-tuner { display: flex; align-items: center; gap: 10px; margin: 10px 0 22px; padding: 7px 10px; border: 2px solid #171d22; border-radius: 3px; background: linear-gradient(#090e13, #1d2a30); box-shadow: inset 0 2px 5px #000, 0 1px 0 #9ca4aa60; color: #c8d5d7; font: 0.75rem monospace; }
+.boombox-tuner div { position: relative; flex: 1; text-align: justify; text-align-last: justify; padding-bottom: 9px; background: repeating-linear-gradient(90deg, #95aeb5 0 1px, transparent 1px 8px) bottom / 100% 5px no-repeat; }
+.boombox-tuner i { position: absolute; top: -3px; bottom: -3px; left: 62%; width: 2px; background: #ff815e; box-shadow: 0 0 4px #ff815e; }
+.boombox-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; color: #30383e; font: 0.65rem monospace; letter-spacing: 0.08em; }
+.boombox::before, .boombox::after { content: ""; position: absolute; bottom: 7px; width: 5px; height: 5px; border: 1px solid #14191e; border-radius: 50%; background: linear-gradient(135deg, #8d979e 40%, #1a2025 42% 58%, #8d979e 60%); }
+.boombox::before { left: 7px; }
+.boombox::after { right: 7px; }
 .boombox-center { min-width: 0; }
 .boombox-display {
   display: grid;
@@ -644,21 +703,62 @@ button {
 }
 .boombox-display span { font-size: 0.75rem; }
 .boombox-display strong { font-size: 1.25rem; overflow-wrap: anywhere; }
-.boombox-cassette { display: flex; align-items: center; justify-content: space-between; margin: 10px 0; padding: 8px 16px; border: 2px solid #526273; border-radius: 5px; background: #0c141e; }
-.boombox-cassette i { width: 22px; height: 22px; flex-shrink: 0; border: 5px dotted #9dafc0; border-radius: 50%; }
+.boombox-tape-label { display: flex; justify-content: space-between; gap: 4px; margin-top: 10px; padding: 5px 8px; color: #302e28; background: #ccc8b8; border-radius: 3px 3px 0 0; border-bottom: 3px solid #bb654a; font: 0.65rem monospace; }
+.boombox-cassette { display: flex; align-items: center; justify-content: space-between; margin: 0 0 12px; padding: 12px 16px; border: 3px solid #1c2228; border-radius: 0 0 5px 5px; background: linear-gradient(155deg, #ffffff20, transparent 45%), #10171b; box-shadow: inset 0 2px 6px #000, 0 1px 0 #819099; }
+.boombox-cassette i { width: 22px; height: 22px; flex-shrink: 0; border: 5px dashed #c4c8c6; outline: 3px solid #42484c; border-radius: 50%; }
 .boombox-cassette span { width: 35%; height: 10px; background: #364454; }
 .is-playing .boombox-cassette i { animation: cassette-spin 2s linear infinite; }
 @keyframes cassette-spin { to { transform: rotate(360deg); } }
-.boombox-controls { display: flex; gap: 6px; }
-.boombox-controls button { flex: 1; min-height: 44px; padding: 8px; border: 1px solid #728497; border-radius: 5px; color: #effbff; background: linear-gradient(#465669, #283847); font: inherit; font-size: 0.875rem; cursor: pointer; white-space: nowrap; }
-.boombox-controls button:first-child { color: #08251e; background: #83e5b9; border-color: #83e5b9; }
-.boombox-controls button:hover { filter: brightness(1.15); }
+.boombox-controls {
+  display: flex;
+  gap: 3px;
+  padding: 5px 5px 10px;
+  border: 1px solid #62696d;
+  border-radius: 2px;
+  background: #090d10;
+  box-shadow: inset 0 3px 6px #000, 0 1px 0 #ffffff30;
+}
+.boombox-controls button {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 6px 8px 14px;
+  border: 1px solid #899094;
+  border-bottom: 5px solid #757e83;
+  border-radius: 1px;
+  color: #1a2023;
+  background: linear-gradient(90deg, #a5adb1, #d7dbdc 10%, #c3c9cb 88%, #8e979c);
+  box-shadow: inset 0 2px 0 #f5f6f4, inset 0 -1px 0 #e5e8e8, 0 5px 0 #3b4349, 0 7px 3px #000;
+  font: 900 1.15rem monospace;
+  text-shadow: 0 1px 0 #ffffff80;
+  cursor: pointer;
+  transition: transform 80ms, box-shadow 80ms;
+}
+.boombox-controls button::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  bottom: 4px;
+  left: 7px;
+  height: 4px;
+  background: repeating-linear-gradient(0deg, #ffffff50 0 1px, #525d6350 1px 2px);
+}
+.boombox-controls button:active,
+.is-playing #music-play {
+  transform: translateY(4px);
+  box-shadow: inset 0 2px 3px #0004, 0 1px 0 #3b4349, 0 2px 2px #000;
+}
+.music-dialog-close:active { transform: translateY(3px); box-shadow: inset 0 1px 3px #0005, 0 1px 0 #141a20; }
+.is-playing .boombox-display { box-shadow: inset 0 0 20px #4affc025; }
+.boombox-controls button:hover { color: #000; }
 .music-dialog button:focus-visible { outline: 2px solid #b4fce0; outline-offset: 3px; }
 @media (max-width: 480px) {
   .boombox { padding: 10px 12px 16px; }
-  .boombox-body { grid-template-columns: 1fr 2.8fr 1fr; gap: 8px; }
+  .boombox-body { grid-template-columns: 1fr 2.4fr 1fr; gap: 8px; }
   .boombox-speaker { border-width: 3px; }
-  .boombox-stereo { display: none; }
+  .boombox-tuner { gap: 6px; padding-inline: 6px; font-size: 0.65rem; }
+  .boombox-footer { font-size: 0.55rem; letter-spacing: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .is-playing .boombox-cassette i { animation: none; }
