@@ -1,0 +1,28 @@
+.guide { max-width: 920px; margin: auto; padding: 36px 24px 80px; }
+.guide a:not(.button) { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 3px; }
+.guide header { padding: 40px 0 24px; border-bottom: 2px solid var(--accent); }
+.guide h1 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.12; margin: 14px 0; letter-spacing: -.04em; }
+.guide h2 { font-size: 1.65rem; line-height: 1.25; margin: 0 0 20px; }
+.guide section { padding: 32px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
+.guide p, .guide li { font-size: 1rem; }
+.guide li + li { margin-top: 10px; }
+.guide figure { margin: 24px 0; }
+.guide figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+.guide figcaption { font-size: .9rem; color: #51495e; margin-top: 10px; }
+.guide .note { padding: 18px 22px; background: #ede7fb; border-left: 4px solid var(--accent); }
+.guide .contents { display: flex; gap: 10px 22px; flex-wrap: wrap; padding: 24px 0; }
+.guide .table-wrap { overflow-x: auto; }
+.guide table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.guide th, .guide td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.guide th { background: #ede7fb; }
+.guide code { overflow-wrap: anywhere; font-size: .95em; }
+.guide .flow { padding: 20px; background: var(--dark); color: white; border-radius: 8px; }
+@media print {
+  body { background: white; color: black; }
+  body::before, .guide .contents, .guide .back-link, .guide .print-action { display: none; }
+  .guide { max-width: none; padding: 0; }
+  .guide section { padding: 18px 0; }
+  .guide figure, .guide tr, .guide .note { break-inside: avoid; }
+  .guide h2 { break-after: avoid; }
+  .guide figure img { max-height: 85mm; width: auto; max-width: 100%; }
+}
