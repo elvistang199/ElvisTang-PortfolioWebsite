@@ -532,7 +532,7 @@
       <div class="container contact-layout reveal">
         <div>
           <div class="section-kicker">Contact</div>
-          <h2>Let's build, defend, debug, and ship<button class="music-trigger" id="music-trigger" type="button" aria-label="Open music vault" aria-haspopup="dialog" aria-controls="music-dialog">.</button></h2>
+          <h2>Let's build, defend, debug, and ship<button class="music-trigger" id="music-trigger" type="button" aria-label="Open boombox" aria-haspopup="dialog" aria-controls="music-dialog">.</button></h2>
         </div>
         <ul class="contact-list">
           <li>
@@ -563,47 +563,31 @@
     </div>
   </footer>
 
-  <dialog id="music-dialog" class="music-project music-dialog" aria-label="Music vault">
-    <button class="music-dialog-close" type="button" aria-label="Close music vault" autofocus>&times;</button>
-            <div class="music-vault" id="music-vault">
-              <div class="music-gate" id="music-gate">
-                <h3>What turns blue and fades to green?</h3>
-                <form class="music-unlock-form" id="music-unlock-form" novalidate>
-                  <label class="sr-only" for="music-answer">Your answer</label>
-                  <input
-                    id="music-answer"
-                    name="answer"
-                    type="password"
-                    autocomplete="off"
-                    placeholder="Type your answer"
-                    aria-describedby="music-answer-message"
-                    required
-                  />
-                  <button type="submit">
-                    Unlock music
-                    <span aria-hidden="true">&rarr;</span>
-                  </button>
-                </form>
-                <p class="music-answer-message" id="music-answer-message" aria-live="polite"></p>
-              </div>
-
-              <div class="music-library" id="music-library" hidden>
-                <div class="music-library-actions">
-                  <button class="music-lock-button" id="music-lock-button" type="button">
-                    Lock
-                  </button>
-                </div>
-                <article class="music-track">
-                  <div class="music-track-info">
-                    <h4>B@BY</h4>
-                    <audio controls controlslist="nodownload" preload="none" aria-label="Play B@BY">
-                      <source src="assets/music/BABY.mp3" type="audio/mpeg" />
-                      Your browser does not support the audio player.
-                    </audio>
-                  </div>
-                </article>
-              </div>
-            </div>
+  <dialog id="music-dialog" class="music-dialog" aria-label="Boombox">
+    <div class="boombox-handle" aria-hidden="true"></div>
+    <div class="boombox">
+      <header class="boombox-header">
+        <span>ELVIS FM <span class="boombox-stereo">STEREO</span></span>
+        <button class="music-dialog-close" type="button" aria-label="Close boombox">&times;</button>
+      </header>
+      <div class="boombox-body">
+        <div class="boombox-speaker" aria-hidden="true"></div>
+        <div class="boombox-center">
+          <div class="boombox-display">
+            <span id="music-status" role="status">Ready to play</span>
+            <strong id="music-title">B@BY</strong>
+            <span id="music-position">TRACK 01 / 01</span>
+          </div>
+          <div class="boombox-cassette" aria-hidden="true"><i></i><span></span><i></i></div>
+          <div class="boombox-controls">
+            <button id="music-play" type="button" autofocus aria-label="Play"><span aria-hidden="true">▶</span> Play</button>
+            <button id="music-next" type="button" aria-label="Next song">Next <span aria-hidden="true">▶|</span></button>
+          </div>
+        </div>
+        <div class="boombox-speaker" aria-hidden="true"></div>
+      </div>
+    </div>
+    <audio id="music-audio" src="assets/music/BABY.mp3" preload="none"></audio>
   </dialog>
 
   <script src="script.js"></script>

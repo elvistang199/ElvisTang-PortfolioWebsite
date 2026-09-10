@@ -4,32 +4,95 @@ const searchInput = document.querySelector("#project-search");
 const visibleCount = document.querySelector("#visible-count");
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
-const musicUnlockForm = document.querySelector("#music-unlock-form");
-const musicAnswer = document.querySelector("#music-answer");
-const musicAnswerMessage = document.querySelector("#music-answer-message");
-const musicGate = document.querySelector("#music-gate");
-const musicLibrary = document.querySelector("#music-library");
-const musicLockButton = document.querySelector("#music-lock-button");
 const musicDialog = document.querySelector("#music-dialog");
 const musicTrigger = document.querySelector("#music-trigger");
+const musicAudio = document.querySelector("#music-audio");
+const musicPlay = document.querySelector("#music-play");
+const musicNext = document.querySelector("#music-next");
+const musicStatus = document.querySelector("#music-status");
+let musicPlaylist = [{ title: "B@BY", src: "assets/music/BABY.mp3" }];
+let musicIndex = 0;
+let musicRequest = 0;
 
-musicTrigger.addEventListener("click", () => {
-  musicDialog.showModal();
-  document.body.classList.add("music-dialog-open");
+const updateMusicTrack = () => {
+  document.querySelector("#music-title").textContent = musicPlaylist[musicIndex].title;
+  document.querySelector("#music-position").textContent =
+    `TRACK ${String(musicIndex + 1).padStart(2, "0")} / ${String(musicPlaylist.length).padStart(2, "0")}`;
+};
+
+// The deployment workflow rebuilds this playlist from assets/music.
+fetch("assets/music/playlist.json")
+  .then((response) => {
+    if (!response.ok) throw new Error("Playlist unavailable");
+    return response.json();
+  })
+  .then((tracks) => {
+    if (!Array.isArray(tracks) || !tracks.length ||
+        !tracks.every((track) => typeof track.title === "string" && typeof track.src === "string")) return;
+    const currentSource = musicPlaylist[musicIndex].src;
+    musicPlaylist = tracks;
+    const currentIndex = tracks.findIndex((track) => track.src === currentSource);
+    musicIndex = Math.max(0, currentIndex);
+    if (currentIndex === -1) musicAudio.src = tracks[0].src;
+    updateMusicTrack();
+  })
+  .catch(() => { /* Keep the bundled song available if the playlist cannot load. */ });
+
+const playMusic = async () => {
+  const request = ++musicRequest;
+  musicStatus.textContent = "Loading…";
+  try {
+    await musicAudio.play();
+  } catch (error) {
+    if (request === musicRequest && error.name !== "AbortError") {
+      musicStatus.textContent = "Unable to play. Try again or press Next.";
+    }
+  }
+};
+
+const nextMusic = () => {
+  musicIndex = (musicIndex + 1) % musicPlaylist.length;
+  musicAudio.src = musicPlaylist[musicIndex].src;
+  updateMusicTrack();
+  playMusic();
+};
+musicPlay.addEventListener("click", () => {
+  if (musicAudio.paused) playMusic();
+  else {
+    musicRequest++;
+    musicAudio.pause();
+  }
 });
-
+musicNext.addEventListener("click", nextMusic);
+musicAudio.addEventListener("ended", nextMusic);
+musicAudio.addEventListener("play", () => {
+  musicPlay.innerHTML = '<span aria-hidden="true">Ⅱ</span> Pause';
+  musicPlay.setAttribute("aria-label", "Pause");
+  musicDialog.classList.add("is-playing");
+});
+musicAudio.addEventListener("playing", () => { musicStatus.textContent = "Now playing"; });
+musicAudio.addEventListener("pause", () => {
+  musicPlay.innerHTML = '<span aria-hidden="true">▶</span> Play';
+  musicPlay.setAttribute("aria-label", "Play");
+  musicStatus.textContent = "Paused";
+  musicDialog.classList.remove("is-playing");
+});
+musicAudio.addEventListener("error", () => {
+  musicStatus.textContent = "Unable to play. Try again or press Next.";
+  musicDialog.classList.remove("is-playing");
+});
+musicTrigger.addEventListener("click", () => {
+  if (musicDialog.open) musicDialog.close();
+  else musicDialog.show();
+});
 musicDialog.querySelector(".music-dialog-close").addEventListener("click", () => musicDialog.close());
-musicDialog.addEventListener("click", (event) => {
-  const bounds = musicDialog.getBoundingClientRect();
-  if (event.target === musicDialog && (
-    event.clientX < bounds.left || event.clientX > bounds.right ||
-    event.clientY < bounds.top || event.clientY > bounds.bottom
-  )) musicDialog.close();
+musicDialog.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") musicDialog.close();
 });
 musicDialog.addEventListener("close", () => {
-  musicDialog.querySelectorAll("audio").forEach((audio) => audio.pause());
-  document.body.classList.remove("music-dialog-open");
-  musicTrigger.focus();
+  musicRequest++;
+  musicAudio.pause();
+  musicTrigger.focus({ preventScroll: true });
 });
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -154,78 +217,6 @@ const wireProjectInteractions = () => {
   });
 };
 
-const setMusicVaultState = (isUnlocked, announce = false) => {
-  musicGate.hidden = isUnlocked;
-  musicLibrary.hidden = !isUnlocked;
-
-  if (announce) {
-    musicAnswerMessage.classList.remove("is-error");
-    musicAnswerMessage.classList.add("is-success");
-    musicAnswerMessage.textContent = "Correct. Opening the music vault…";
-  }
-};
-
-const digestAnswer = async (answer) => {
-  const answerBytes = new TextEncoder().encode(answer);
-  const digest = await crypto.subtle.digest("SHA-256", answerBytes);
-  return [...new Uint8Array(digest)]
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-};
-
-const wireMusicVault = () => {
-  if (!musicUnlockForm) {
-    return;
-  }
-
-  const unlockedForSession = sessionStorage.getItem("music-vault-unlocked") === "true";
-  setMusicVaultState(unlockedForSession);
-
-  musicUnlockForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const normalizedAnswer = musicAnswer.value.trim().toLowerCase();
-
-    if (!normalizedAnswer) {
-      musicAnswer.setAttribute("aria-invalid", "true");
-      musicAnswerMessage.className = "music-answer-message is-error";
-      musicAnswerMessage.textContent = "Enter an answer to try the lock.";
-      musicAnswer.focus();
-      return;
-    }
-
-    const answerDigest = await digestAnswer(normalizedAnswer);
-    const isCorrect =
-      answerDigest === "8d2ac8b58ead9744d77286de9b0bcb7a894f238c3149fc9f3b1e3caff36330fe";
-
-    if (!isCorrect) {
-      musicAnswer.setAttribute("aria-invalid", "true");
-      musicAnswerMessage.className = "music-answer-message is-error";
-      musicAnswerMessage.textContent = "That did not open it. Try another answer.";
-      musicAnswer.select();
-      return;
-    }
-
-    musicAnswer.removeAttribute("aria-invalid");
-    sessionStorage.setItem("music-vault-unlocked", "true");
-    setMusicVaultState(true, true);
-  });
-
-  musicAnswer.addEventListener("input", () => {
-    musicAnswer.removeAttribute("aria-invalid");
-    musicAnswerMessage.className = "music-answer-message";
-    musicAnswerMessage.textContent = "";
-  });
-
-  musicLockButton.addEventListener("click", () => {
-    sessionStorage.removeItem("music-vault-unlocked");
-    musicAnswer.value = "";
-    musicAnswerMessage.className = "music-answer-message";
-    musicAnswerMessage.textContent = "";
-    setMusicVaultState(false);
-    musicAnswer.focus();
-  });
-};
-
 const wireTiltEffects = () => {
   if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) {
     return;
@@ -330,7 +321,6 @@ window.addEventListener("scroll", updateScrollProgress, { passive: true });
 window.addEventListener("resize", updateScrollProgress);
 
 wireProjectInteractions();
-wireMusicVault();
 wireTiltEffects();
 wireRevealEffects();
 wireNavState();
