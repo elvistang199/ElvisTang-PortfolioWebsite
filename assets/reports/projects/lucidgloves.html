@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An illustrated LucidGloves Prototype 4/4.1 project guide covering parts, assembly, wiring, firmware, calibration, and OpenGloves integration. Credits LucidVR's open-source project.">
+  <title>LucidGloves Build Guide | Elvis Tang</title>
+  <link rel="icon" href="../purple-tiger-favicon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="lucidgloves.css">
+</head>
+<body>
+<main class="guide">
+  <a class="back-link" href="../index.html#lucidgloves">&larr; Back to projects</a>
+  <header>
+    <p class="eyebrow">Embedded systems · Open-source project guide</p>
+    <h1>LucidGloves: building a VR haptic glove</h1>
+    <p>A practical walkthrough of the Prototype 4/4.1 design: translate finger movement into virtual hands, then add physical resistance with servo-driven haptics.</p>
+    <p><strong>Original project:</strong> LucidVR / Lucas VRTech and contributors.<br><strong>Document:</strong> a source-based learning guide for Elvis Tang’s portfolio · Summer of 2020.</p>
+    <p class="note">LucidGloves is <strong>open source</strong>. Its repository provides firmware and printable hardware files under the <a href="https://github.com/LucidVR/lucidgloves/blob/main/LICENSE">MIT license</a>. This guide documents the upstream build process; it does not claim original authorship of the glove or report a personally verified build.</p>
+    <button class="button print-action" type="button" onclick="window.print()">Print / Save as PDF</button>
+  </header>
+  <nav class="contents" aria-label="Guide contents">
+    <a href="#overview">Overview</a><a href="#parts">Parts</a><a href="#printing">Printing</a><a href="#assembly">Assembly</a><a href="#wiring">Wiring</a><a href="#firmware">Firmware</a><a href="#vr">VR setup</a><a href="#checks">Checks</a><a href="#sources">Sources</a>
+  </nav>
+  <section id="overview">
+    <h2>01 / Understand the system</h2>
+    <p>A string from each fingertip turns a spring-loaded spool connected to a potentiometer. The microcontroller reads those changes and sends finger data to OpenGloves. A mounted controller or tracker supplies hand position; the glove’s finger sensors alone do not provide spatial tracking.</p>
+    <p class="flow">Finger motion → spool + potentiometer → ESP32 → USB or Bluetooth Serial → OpenGloves → SteamVR<br>Supported application → force-feedback command → servo → resistance at the spool</p>
+    <p>The supplied <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ">Lucas VRTech tutorial</a> demonstrates Prototype 4. Follow its ESP32 route here, using matching 4/4.1 hardware files. The repository also contains other revisions; do not mix their parts or pin assignments. Finger tracking and force feedback have different application requirements, so test them independently.</p>
+  </section>
+  <section id="parts">
+    <h2>02 / Gather parts for one hand</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th scope="col">Part</th><th scope="col">Quantity / purpose</th></tr></thead>
+      <tbody>
+        <tr><td>B10K potentiometers</td><td>5; green or WL type, with matching printed holders and tensioners</td></tr>
+        <tr><td>180° micro servos</td><td>5; the parts list recommends MG90S</td></tr>
+        <tr><td>Retractable badge reels</td><td>5; supply springs and string</td></tr>
+        <tr><td>ESP-WROOM-32 development board</td><td>1; finger sensing and servo control</td></tr>
+        <tr><td>Glove and mounting materials</td><td>Straps, elastic, foam, printed parts, connectors and wire</td></tr>
+        <tr><td>Power and USB cable</td><td>Data-capable cable; suitable servo power supply. The wiki suggests 5 V, 2+ A, with clean ESP32 power to avoid brownouts.</td></tr>
+        <tr><td>VR equipment</td><td>SteamVR-capable PC and headset; compatible controller or tracker and mount</td></tr>
+        <tr><td>Optional controls</td><td>Joystick and buttons; a calibration button is useful</td></tr>
+      </tbody>
+    </table></div>
+    <p>Use the <a href="https://github.com/LucidVR/lucidgloves/wiki/Prototype-4-Parts-List">official parts list</a> to check exact variants before ordering. Budget separately for tools, printing, VR equipment and shipping; the video’s historical cost is not a current shopping quote.</p>
+  </section>
+  <section id="printing">
+    <h2>03 / Print and check the fit</h2>
+    <p>Download the <a href="https://github.com/LucidVR/lucidgloves/tree/main/hardware">hardware files</a>. For each hand, prepare five haptic spools, covers, tensioners and holders; five fitted end caps; finger guides; and the correct left/right rigid mount and controller/tracker slider.</p>
+    <p>The <a href="https://github.com/LucidVR/lucidgloves/wiki/Prototype-4-Printing-Guide">printing guide</a> suggests a 0.4 mm nozzle, 0.2 mm layers, 10–20% infill and 0.8 mm shells. Parts are designed to print flat without supports. Match holders to both the potentiometer type and mounting method, and resize end caps for each finger.</p>
+    <p><strong>Checkpoint:</strong> trial-fit one complete module before printing the remaining set. Check that the spool rotates and the slider seats securely. See <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ&t=153s">video, 2:33</a>.</p>
+  </section>
+  <section id="assembly">
+    <h2>04 / Assemble the glove</h2>
+    <ol>
+      <li>Open a badge reel carefully and recover its spring and string. Secure the potentiometer in the tensioner, then fit the spring as shown in the tutorial. Confirm that rotation returns smoothly.</li>
+      <li>Thread the string through the haptic spool and cover, seat the spool on the potentiometer, and close the module. Wind the string and check its return action.</li>
+      <li>Fit the module and servo to the holder. Leave the servo horn off until the software calibration stage. Repeat for all five fingers.</li>
+      <li>Attach end caps and guides to the glove. Add foam under the rigid mount, then fit straps and elastic. Route each string through its finger guides and secure it at the end cap.</li>
+    </ol>
+    <p><strong>Checkpoint:</strong> open and close each finger individually. Every spool should turn and retract without snagging or pulling the mount out of place. Complete hot-glue work away from bare skin. Follow <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ&t=202s">3:22–7:03 in the tutorial</a> for the small spring and string details.</p>
+    <figure><a href="../assets/lucidgloves/mount-figure.svg"><img src="../assets/lucidgloves/mount-figure.svg" alt="Tutorial screenshot showing haptic modules on the rigid mount while the glove is being strung" width="864" height="427" loading="lazy"></a><figcaption>Figure 1. String routing and mounted modules during assembly, around 6:43. Screenshot from Lucas VRTech’s tutorial; click to enlarge.</figcaption></figure>
+  </section>
+  <section id="wiring">
+    <h2>05 / Wire the sensors and servos</h2>
+    <p>Use the <a href="https://github.com/LucidVR/lucidgloves/wiki/Prototype-4-Wiring-Diagram">full-resolution wiring diagram</a> and the pin definitions in your downloaded firmware together. With power disconnected, connect each potentiometer to 3.3 V, ground and its assigned analog input. Connect each servo’s signal to its assigned output; power the motors from the servo supply and share ground with the ESP32.</p>
+    <p><strong>Checkpoint:</strong> check polarity, continuity and finger-to-pin labels before powering up. Do not power the servo bank from the ESP32’s 3.3 V pin. Secure connections so finger movement cannot pull them loose. The tutorial explains this at <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ&t=425s">7:05–9:25</a>.</p>
+    <figure><a href="../assets/lucidgloves/wiring-figure.svg"><img src="../assets/lucidgloves/wiring-figure.svg" alt="Video screenshot of the Prototype 4 ESP32 wiring diagram with five potentiometers and five servos" width="864" height="427" loading="lazy"></a><figcaption>Figure 2. Wiring overview at 9:20, from Lucas VRTech’s tutorial. Use the linked wiki diagram for readable pin-level wiring.</figcaption></figure>
+  </section>
+  <section id="firmware">
+    <h2>06 / Upload and validate the firmware</h2>
+    <ol>
+      <li>Install Arduino IDE, the ESP32 board package and the ESP32Servo library using the <a href="https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial">firmware setup guide</a>. Install the USB-to-serial driver appropriate to your board if needed.</li>
+      <li>Download or clone the repository. Open <code>firmware/lucidgloves-firmware/lucidgloves-firmware.ino</code>. Select your actual board and USB port.</li>
+      <li>Match sensor and motor pin definitions to the wiring. Configure the calibration input, enable force feedback for this build, and disable unused joystick inputs. Start with USB Serial before moving to Bluetooth.</li>
+      <li>Compile and upload. Open Serial Monitor at the firmware’s baud rate; the video uses 115200. Move one finger at a time to check that its readings change consistently.</li>
+    </ol>
+    <p>The wiki explains that newer firmware uses letter-number encoding, so output may differ from older tutorials. Check <code>FLIP_POTS</code> if readings move in the wrong direction. For wireless operation, configure <code>COMM_BTSERIAL</code>, set a device name, upload again and pair the device. Close Serial Monitor before another application opens the port. See <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ&t=566s">9:26–12:28</a>.</p>
+  </section>
+  <section id="vr">
+    <h2>07 / Connect to VR and calibrate</h2>
+    <ol>
+      <li>Install <a href="https://store.steampowered.com/app/1574050/OpenGloves/">OpenGloves on Steam</a> and activate the driver. Select the correct hand, enable feedback and match the communication mode to the firmware. Set the USB port or Bluetooth device name.</li>
+      <li>Mount the controller/tracker securely and start SteamVR. Open and close your hand through its full comfortable range to calibrate the fingers. Use the configured calibration button to reset if needed.</li>
+      <li>Use the driver’s pose calibration controls to align the virtual hand with the physical glove. The tutorial demonstrates manual and automatic alignment.</li>
+      <li>Test servo extension and retraction before fitting the horns. Following the tutorial’s orientation, fit each horn so the extended state stops spool movement and the retracted state allows it. Keep an accessible power disconnect and stop if motion is uncomfortable.</li>
+      <li>Use the force-feedback demo described in the video to test contact and release. Verify current demo/mod availability through OpenGloves before attempting a game-specific setup.</li>
+    </ol>
+    <p>These are the tutorial’s setup steps at <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ&t=749s">12:29–15:12</a>; interface labels can vary by release. Haptics require a supported application or integration. Do not assume every SteamVR game supports force feedback.</p>
+    <figure><a href="../assets/lucidgloves/opengloves-figure.svg"><img src="../assets/lucidgloves/opengloves-figure.svg" alt="Tutorial screenshot introducing the OpenGloves Steam page before driver configuration" width="864" height="427" loading="lazy"></a><figcaption>Figure 3. OpenGloves installation reference at 12:30. Screenshot from Lucas VRTech’s tutorial.</figcaption></figure>
+  </section>
+  <section id="checks">
+    <h2>08 / Verify and document the result</h2>
+    <p>Use these as acceptance checks for your own build. No test results are claimed in this source-based guide.</p>
+    <ul>
+      <li><strong>Mechanics:</strong> all five strings retract, finger guides stay attached and the mount remains stable.</li>
+      <li><strong>Sensors:</strong> each finger changes the correct channel smoothly over its calibrated range.</li>
+      <li><strong>Tracking:</strong> the virtual hand follows the mounted tracker and finger motion remains consistent.</li>
+      <li><strong>Haptics:</strong> each servo engages and releases in the supported demo without trapping a finger or resetting the board.</li>
+    </ul>
+    <div class="table-wrap"><table><thead><tr><th scope="col">Symptom</th><th scope="col">First checks</th></tr></thead><tbody>
+      <tr><td>No serial data</td><td>Data cable, board driver, selected port, baud rate and firmware upload.</td></tr>
+      <tr><td>Wrong or noisy finger motion</td><td>Pin mapping, loose connectors, string friction, calibration and potentiometer direction.</td></tr>
+      <tr><td>Board resets during haptics</td><td>Servo supply capacity, shared ground and ESP32 power stability.</td></tr>
+      <tr><td>Tracking works, haptics do not</td><td>Motor power, firmware feedback setting, driver feedback option and application support.</td></tr>
+    </tbody></table></div>
+    <p>Save your firmware revision, board/library versions, pin map, build photos and observed results. Record failures as well as successes so future changes can be compared against a known configuration.</p>
+  </section>
+  <section id="sources">
+    <h2>Sources and open-source credit</h2>
+    <p>Design, firmware and hardware files: <a href="https://github.com/LucidVR/lucidgloves">LucidVR/lucidgloves</a>. Build documentation: <a href="https://github.com/LucidVR/lucidgloves/wiki">LucidGloves wiki</a>. Video and all three screenshots: Lucas VRTech, <a href="https://www.youtube.com/watch?v=2yF-SJcg3zQ">How to build cheap VR Haptic Gloves to FEEL VR.</a> Driver source: <a href="https://github.com/LucidVR/opengloves-driver">LucidVR/opengloves-driver</a>.</p>
+    <p>The repository is MIT-licensed; retain its copyright and license notice when redistributing covered code or substantial portions. Video screenshots are attributed excerpts for this instructional commentary, not a claim that the video carries the repository’s MIT license.</p>
+    <p>For version-specific help, consult the <a href="https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide">firmware troubleshooting guide</a> and upstream community. This document focuses on Prototype 4/4.1 and does not incorporate the later Prototype 5 design.</p>
+  </section>
+</main>
+</body>
+</html>
