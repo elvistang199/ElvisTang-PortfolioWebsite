@@ -26,3 +26,7 @@
   .guide h2 { break-after: avoid; }
   .guide figure img { max-height: 85mm; width: auto; max-width: 100%; }
 }
+
+/* Document highlight colors. */
+.guide { --accent: #1d4ed8; --accent-deep: #1d4ed8; }
+.guide h1, .guide h2, .guide .eyebrow { color: #1d4ed8; }
