@@ -11,16 +11,57 @@ const musicPlay = document.querySelector("#music-play");
 const musicNext = document.querySelector("#music-next");
 const musicStatus = document.querySelector("#music-status");
 let musicPlaylist = [
-  { title: "B@BY", src: "assets/music/BABY.mp3" },
-  { title: "Bullet", src: "assets/music/Bullet.mp3" },
-  { title: "moonlight", src: "assets/music/moonlight.mp3" },
+  { title: "Moonlight", src: "assets/music/moonlight.mp3?v=b1e058c14259" },
+  { title: "B@BY", src: "assets/music/BABY.mp3?v=13a3405e51fe" },
+  { title: "Bullet", src: "assets/music/Bullet.mp3?v=5140b365c61a" },
+  { title: "2D", src: "assets/music/2D.mp3?v=6e46331b8fcc" },
 ];
 let musicIndex = 0;
 let musicRequest = 0;
 let musicVolumeLevel = 70;
+let musicFrequency = 104;
+let musicIsPlaying = false;
 let musicGain;
 let musicSource;
 let musicAudioContext;
+let musicStaticGain;
+let musicStaticBuffer;
+let musicStaticSource;
+const stopMusicStatic = () => {
+  if (musicStaticSource) {
+    musicStaticSource.stop();
+    musicStaticSource.disconnect();
+    musicStaticSource = null;
+  }
+  if (musicStaticGain) musicStaticGain.gain.value = 0;
+};
+const updateMusicStatic = () => {
+  if (!musicAudioContext || !musicGain) return;
+  if (!musicIsPlaying || musicAudio.paused || musicAudio.ended || musicAudio.error || !musicDialog.open) {
+    stopMusicStatic();
+    return;
+  }
+  // Both sides of 104 MHz use the same distance-to-static curve.
+  const amount = Math.abs(musicFrequency - 104) / 16;
+  if (!musicStaticGain) {
+    musicStaticGain = musicAudioContext.createGain();
+    musicStaticGain.gain.value = 0;
+    musicStaticGain.connect(musicGain);
+  }
+  if (!musicStaticSource && amount > 0) {
+    if (!musicStaticBuffer) {
+      musicStaticBuffer = musicAudioContext.createBuffer(1, musicAudioContext.sampleRate * 3, musicAudioContext.sampleRate);
+      const samples = musicStaticBuffer.getChannelData(0);
+      for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+    }
+    musicStaticSource = musicAudioContext.createBufferSource();
+    musicStaticSource.buffer = musicStaticBuffer;
+    musicStaticSource.loop = true;
+    musicStaticSource.connect(musicStaticGain);
+    musicStaticSource.start();
+  }
+  musicStaticGain.gain.setTargetAtTime(amount * 0.5, musicAudioContext.currentTime, 0.035);
+};
 // Route hosted playback through gain so touch volume also works on iOS.
 const prepareMusicAudio = () => {
   const Context = window.AudioContext || window.webkitAudioContext;
@@ -40,6 +81,9 @@ const prepareMusicAudio = () => {
 };
 const musicVolume = document.querySelector("#music-volume");
 const musicVolumeValue = document.querySelector("#music-volume-value");
+const musicTuning = document.querySelector("#music-tuning");
+const musicFrequencyInput = document.querySelector("#music-frequency");
+const musicFrequencyValue = document.querySelector("#music-frequency-value");
 const setMusicVolume = (value) => {
   const volume = Math.max(0, Math.min(100, value));
   musicVolumeLevel = volume;
@@ -52,57 +96,76 @@ const setMusicVolume = (value) => {
   musicVolumeValue.textContent = `${Math.round(volume)}%`;
 };
 setMusicVolume(70);
-let volumeDrag = null;
-const volumePointerAngle = (event) => {
-  const bounds = musicVolume.getBoundingClientRect();
+const setMusicFrequency = (value) => {
+  musicFrequency = Math.round(Math.max(88, Math.min(108, value)) * 10) / 10;
+  const frequency = musicFrequency.toFixed(1);
+  const description = `${frequency} megahertz${musicFrequency === 104 ? ", clear signal" : ""}`;
+  musicFrequencyInput.value = frequency;
+  musicFrequencyInput.setAttribute("aria-valuetext", description);
+  musicFrequencyValue.textContent = `${frequency} MHz`;
+  musicTuning.style.setProperty("--knob-angle", `${(musicFrequency - 88) / 20 * 270 - 135}deg`);
+  musicTuning.setAttribute("aria-valuenow", frequency);
+  musicTuning.setAttribute("aria-valuetext", description);
+  updateMusicStatic();
+};
+setMusicFrequency(104);
+musicFrequencyInput.addEventListener("input", () => {
+  prepareMusicAudio();
+  setMusicFrequency(Number(musicFrequencyInput.value));
+});
+const dialPointerAngle = (dial, event) => {
+  const bounds = dial.getBoundingClientRect();
   return Math.atan2(event.clientX - bounds.left - bounds.width / 2,
     bounds.top + bounds.height / 2 - event.clientY) * 180 / Math.PI;
 };
-musicVolume.addEventListener("pointerdown", (event) => {
-  if (!event.isPrimary || event.button !== 0) return;
-  event.preventDefault();
-  musicVolume.focus({ preventScroll: true });
-  musicVolume.setPointerCapture(event.pointerId);
-  prepareMusicAudio();
-  const bounds = musicVolume.getBoundingClientRect();
-  const radius = Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2);
-  volumeDrag = { id: event.pointerId, angle: volumePointerAngle(event), y: event.clientY,
-    mode: radius < bounds.width * 0.3 ? "vertical" : "rotary" };
-  musicVolume.classList.add("is-turning");
-});
-musicVolume.addEventListener("pointermove", (event) => {
-  if (!volumeDrag || volumeDrag.id !== event.pointerId) return;
-  if (volumeDrag.mode === "vertical") {
-    setMusicVolume(musicVolumeLevel + (volumeDrag.y - event.clientY) * 0.7);
-    volumeDrag.y = event.clientY;
-    return;
-  }
-  const bounds = musicVolume.getBoundingClientRect();
-  if (Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2) < 8) {
-    volumeDrag.angle = null;
-    return;
-  }
-  const angle = volumePointerAngle(event);
-  if (volumeDrag.angle === null) { volumeDrag.angle = angle; return; }
-  // Normalize across the bottom seam so a full turn never jumps in volume.
-  const delta = ((angle - volumeDrag.angle + 540) % 360) - 180;
-  setMusicVolume(musicVolumeLevel + delta / 2.7);
-  volumeDrag.angle = angle;
-});
-const stopVolumeDrag = () => {
-  volumeDrag = null;
-  musicVolume.classList.remove("is-turning");
-};
-musicVolume.addEventListener("pointerup", stopVolumeDrag);
-musicVolume.addEventListener("pointercancel", stopVolumeDrag);
-musicVolume.addEventListener("lostpointercapture", stopVolumeDrag);
-musicVolume.addEventListener("keydown", (event) => {
-  const steps = { ArrowUp: 5, ArrowRight: 5, ArrowDown: -5, ArrowLeft: -5, PageUp: 10, PageDown: -10 };
-  if (event.key === "Home" || event.key === "End" || event.key in steps) {
+const bindMusicDial = (dial, { min, max, step, pageStep = step * 10, getValue, setValue }) => {
+  let drag = null;
+  dial.addEventListener("pointerdown", (event) => {
+    if (!event.isPrimary || event.button !== 0) return;
     event.preventDefault();
-    setMusicVolume(event.key === "Home" ? 0 : event.key === "End" ? 100 : musicVolumeLevel + steps[event.key]);
-  }
-});
+    dial.focus({ preventScroll: true });
+    dial.setPointerCapture(event.pointerId);
+    prepareMusicAudio();
+    const bounds = dial.getBoundingClientRect();
+    const radius = Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2);
+    drag = { id: event.pointerId, angle: dialPointerAngle(dial, event), y: event.clientY,
+      value: getValue(), mode: radius < bounds.width * 0.3 ? "vertical" : "rotary" };
+    dial.classList.add("is-turning");
+  });
+  dial.addEventListener("pointermove", (event) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    let change;
+    if (drag.mode === "vertical") {
+      change = (drag.y - event.clientY) * (max - min) * 0.007;
+      drag.y = event.clientY;
+    } else {
+      const bounds = dial.getBoundingClientRect();
+      if (Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2) < 8) {
+        drag.angle = null;
+        return;
+      }
+      const angle = dialPointerAngle(dial, event);
+      if (drag.angle === null) { drag.angle = angle; return; }
+      // Normalize across the bottom seam so a full turn never jumps.
+      change = ((angle - drag.angle + 540) % 360 - 180) / 270 * (max - min);
+      drag.angle = angle;
+    }
+    drag.value = Math.max(min, Math.min(max, drag.value + change));
+    setValue(drag.value);
+  });
+  const stopDrag = () => { drag = null; dial.classList.remove("is-turning"); };
+  ["pointerup", "pointercancel", "lostpointercapture"].forEach((event) => dial.addEventListener(event, stopDrag));
+  dial.addEventListener("keydown", (event) => {
+    const steps = { ArrowUp: step, ArrowRight: step, ArrowDown: -step, ArrowLeft: -step, PageUp: pageStep, PageDown: -pageStep };
+    if (event.key === "Home" || event.key === "End" || event.key in steps) {
+      event.preventDefault();
+      prepareMusicAudio();
+      setValue(event.key === "Home" ? min : event.key === "End" ? max : getValue() + steps[event.key]);
+    }
+  });
+};
+bindMusicDial(musicVolume, { min: 0, max: 100, step: 5, pageStep: 10, getValue: () => musicVolumeLevel, setValue: setMusicVolume });
+bindMusicDial(musicTuning, { min: 88, max: 108, step: 0.1, getValue: () => musicFrequency, setValue: setMusicFrequency });
 let boomboxSoundContext;
 
 // A brief spring-and-latch clack, synthesized locally on a button gesture.
@@ -145,9 +208,10 @@ const updateMusicTrack = () => {
   document.querySelector("#music-position").textContent =
     `TRACK ${String(musicIndex + 1).padStart(2, "0")} / ${String(musicPlaylist.length).padStart(2, "0")}`;
 };
+updateMusicTrack();
 
 // The deployment workflow rebuilds this playlist from assets/music.
-fetch("assets/music/playlist.json")
+fetch("assets/music/playlist.json", { cache: "no-cache" })
   .then((response) => {
     if (!response.ok) throw new Error("Playlist unavailable");
     return response.json();
@@ -167,7 +231,7 @@ fetch("assets/music/playlist.json")
 const playMusic = async () => {
   prepareMusicAudio();
   const request = ++musicRequest;
-  musicStatus.textContent = "Loading…";
+  musicStatus.textContent = "";
   try {
     await musicAudio.play();
   } catch (error) {
@@ -177,7 +241,83 @@ const playMusic = async () => {
   }
 };
 
+const musicReels = [...document.querySelectorAll(".cassette-reel")];
+const musicTime = document.querySelector("#music-time");
+const formatMusicTime = (seconds) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+const updateMusicTime = () => {
+  const ready = Number.isFinite(musicAudio.duration) && musicAudio.duration > 0;
+  const duration = ready ? musicAudio.duration : 0;
+  const position = ready ? Math.max(0, Math.min(duration, musicAudio.currentTime)) : 0;
+  musicTime.textContent = `${formatMusicTime(position)} / ${ready ? formatMusicTime(duration) : "--:--"}`;
+  musicReels.forEach((reel) => {
+    reel.setAttribute("aria-disabled", String(!ready));
+    reel.setAttribute("aria-valuemax", String(duration));
+    reel.setAttribute("aria-valuenow", String(position));
+    reel.setAttribute("aria-valuetext", ready ? `${formatMusicTime(position)} of ${formatMusicTime(duration)}` : "Track loading");
+  });
+};
+const seekMusic = (seconds) => {
+  if (!Number.isFinite(musicAudio.duration) || musicAudio.duration <= 0) return;
+  musicAudio.currentTime = Math.max(0, Math.min(musicAudio.duration, seconds));
+  musicReels.forEach((reel) => reel.style.setProperty("--reel-angle", `${musicAudio.currentTime * 12}deg`));
+  updateMusicTime();
+};
+let reelDrag = null;
+const stopReelDrag = (resume = true) => {
+  if (!reelDrag) return;
+  const drag = reelDrag;
+  reelDrag = null;
+  drag.reel.classList.remove("is-turning");
+  if (drag.reel.hasPointerCapture(drag.id)) drag.reel.releasePointerCapture(drag.id);
+  if (resume && drag.wasPlaying && musicDialog.open && drag.source === musicAudio.src) playMusic();
+};
+musicReels.forEach((reel) => {
+  reel.addEventListener("pointerdown", (event) => {
+    if (!event.isPrimary || event.button !== 0 || reelDrag || !Number.isFinite(musicAudio.duration) || musicAudio.duration <= 0) return;
+    event.preventDefault();
+    reel.focus({ preventScroll: true });
+    reel.setPointerCapture(event.pointerId);
+    const bounds = reel.getBoundingClientRect();
+    const radius = Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2);
+    reelDrag = { reel, id: event.pointerId, source: musicAudio.src, wasPlaying: !musicAudio.paused && !musicAudio.ended,
+      angle: dialPointerAngle(reel, event), y: event.clientY, mode: radius < bounds.width * 0.3 ? "vertical" : "rotary" };
+    musicRequest++;
+    musicAudio.pause();
+    reel.classList.add("is-turning");
+  });
+  reel.addEventListener("pointermove", (event) => {
+    if (!reelDrag || reelDrag.reel !== reel || reelDrag.id !== event.pointerId) return;
+    let seconds;
+    if (reelDrag.mode === "vertical") {
+      seconds = (reelDrag.y - event.clientY) * 0.25;
+      reelDrag.y = event.clientY;
+    } else {
+      const bounds = reel.getBoundingClientRect();
+      if (Math.hypot(event.clientX - bounds.left - bounds.width / 2, event.clientY - bounds.top - bounds.height / 2) < 6) {
+        reelDrag.angle = null;
+        return;
+      }
+      const angle = dialPointerAngle(reel, event);
+      if (reelDrag.angle === null) { reelDrag.angle = angle; return; }
+      seconds = ((angle - reelDrag.angle + 540) % 360 - 180) / 360 * 30;
+      reelDrag.angle = angle;
+    }
+    seekMusic(musicAudio.currentTime + seconds);
+  });
+  ["pointerup", "pointercancel", "lostpointercapture"].forEach((event) => reel.addEventListener(event, () => stopReelDrag()));
+  reel.addEventListener("keydown", (event) => {
+    const steps = { ArrowRight: 5, ArrowUp: 5, ArrowLeft: -5, ArrowDown: -5, PageUp: 15, PageDown: -15 };
+    if (event.key === "Home" || event.key === "End" || event.key in steps) {
+      event.preventDefault();
+      seekMusic(event.key === "Home" ? 0 : event.key === "End" ? musicAudio.duration : musicAudio.currentTime + steps[event.key]);
+    }
+  });
+});
+["loadedmetadata", "durationchange", "timeupdate", "emptied"].forEach((event) => musicAudio.addEventListener(event, updateMusicTime));
+updateMusicTime();
+
 const nextMusic = () => {
+  stopReelDrag(false);
   musicIndex = (musicIndex + 1) % musicPlaylist.length;
   musicAudio.src = musicPlaylist[musicIndex].src;
   updateMusicTrack();
@@ -197,14 +337,26 @@ musicAudio.addEventListener("play", () => {
   musicPlay.setAttribute("aria-label", "Pause");
   musicDialog.classList.add("is-playing");
 });
-musicAudio.addEventListener("playing", () => { musicStatus.textContent = "Now playing"; });
+musicAudio.addEventListener("playing", () => {
+  musicIsPlaying = true;
+  musicStatus.textContent = "";
+  updateMusicStatic();
+});
+["waiting", "emptied", "ended"].forEach((event) => musicAudio.addEventListener(event, () => {
+  musicIsPlaying = false;
+  stopMusicStatic();
+}));
 musicAudio.addEventListener("pause", () => {
+  musicIsPlaying = false;
+  stopMusicStatic();
   musicPlay.innerHTML = '<span aria-hidden="true">▶</span>';
   musicPlay.setAttribute("aria-label", "Play");
-  musicStatus.textContent = "Paused";
+  musicStatus.textContent = "";
   musicDialog.classList.remove("is-playing");
 });
 musicAudio.addEventListener("error", () => {
+  musicIsPlaying = false;
+  stopMusicStatic();
   musicStatus.textContent = "Unable to play. Try again or press Next.";
   musicDialog.classList.remove("is-playing");
 });
@@ -218,6 +370,9 @@ musicDialog.addEventListener("keydown", (event) => {
 });
 musicDialog.addEventListener("close", () => {
   musicRequest++;
+  stopReelDrag(false);
+  musicIsPlaying = false;
+  stopMusicStatic();
   musicAudio.pause();
   musicTrigger.focus({ preventScroll: true });
 });

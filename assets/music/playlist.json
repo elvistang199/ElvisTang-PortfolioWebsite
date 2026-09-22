@@ -1,14 +1,18 @@
 [
   {
+    "title": "Moonlight",
+    "src": "assets/music/moonlight.mp3?v=b1e058c14259"
+  },
+  {
     "title": "B@BY",
-    "src": "assets/music/BABY.mp3"
+    "src": "assets/music/BABY.mp3?v=13a3405e51fe"
   },
   {
     "title": "Bullet",
-    "src": "assets/music/Bullet.mp3"
+    "src": "assets/music/Bullet.mp3?v=5140b365c61a"
   },
   {
-    "title": "moonlight",
-    "src": "assets/music/moonlight.mp3"
+    "title": "2D",
+    "src": "assets/music/2D.mp3?v=6e46331b8fcc"
   }
 ]
