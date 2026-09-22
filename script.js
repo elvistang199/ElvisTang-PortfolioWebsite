@@ -10,7 +10,11 @@ const musicAudio = document.querySelector("#music-audio");
 const musicPlay = document.querySelector("#music-play");
 const musicNext = document.querySelector("#music-next");
 const musicStatus = document.querySelector("#music-status");
-let musicPlaylist = [{ title: "B@BY", src: "assets/music/BABY.mp3" }];
+let musicPlaylist = [
+  { title: "B@BY", src: "assets/music/BABY.mp3" },
+  { title: "Bullet", src: "assets/music/Bullet.mp3" },
+  { title: "moonlight", src: "assets/music/moonlight.mp3" },
+];
 let musicIndex = 0;
 let musicRequest = 0;
 let musicVolumeLevel = 70;
@@ -158,7 +162,7 @@ fetch("assets/music/playlist.json")
     if (currentIndex === -1) musicAudio.src = tracks[0].src;
     updateMusicTrack();
   })
-  .catch(() => { /* Keep the bundled song available if the playlist cannot load. */ });
+  .catch(() => { /* Keep the bundled songs available if the playlist cannot load. */ });
 
 const playMusic = async () => {
   prepareMusicAudio();

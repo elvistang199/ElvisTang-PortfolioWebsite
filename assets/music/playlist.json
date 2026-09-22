@@ -2,5 +2,13 @@
   {
     "title": "B@BY",
     "src": "assets/music/BABY.mp3"
+  },
+  {
+    "title": "Bullet",
+    "src": "assets/music/Bullet.mp3"
+  },
+  {
+    "title": "moonlight",
+    "src": "assets/music/moonlight.mp3"
   }
 ]
