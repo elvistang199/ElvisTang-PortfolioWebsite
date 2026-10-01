@@ -789,6 +789,13 @@ button {
   .is-playing .boombox-cassette i { animation: none; }
 }
 
+.project-card .project-date {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #625b70;
+}
+
 .card-topline {
   position: relative;
   display: flex;

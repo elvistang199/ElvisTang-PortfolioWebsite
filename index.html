@@ -123,7 +123,7 @@
             <button class="filter-button" type="button" data-filter="data">Data</button>
             <button class="filter-button" type="button" data-filter="systems">Systems</button>
           </div>
-          <p class="project-count" aria-live="polite"><span id="visible-count">9</span> projects showing</p>
+          <p class="project-count" aria-live="polite"><span id="visible-count">10</span> projects showing</p>
         </div>
 
         <div class="project-grid">
@@ -140,6 +140,7 @@
               <span>Statistical analysis</span>
             </div>
             <h3>Identification of Statistically Significant Factors Contributing to Severity of Car Accidents</h3>
+            <p class="project-date" aria-label="Project date">Summer 2019</p>
             <p>
               An analytical research project focused on identifying measurable accident factors
               and interpreting their statistical relationship to crash severity.
@@ -181,6 +182,7 @@
               <span>Open-source build guide</span>
             </div>
             <h3>LucidGloves — VR Haptic Glove</h3>
+            <p class="project-date" aria-label="Project date">Summer 2020</p>
             <p>
               An illustrated guide to LucidVR’s open-source Prototype 4/4.1 glove, covering
               printed hardware, assembly, wiring, firmware, and SteamVR calibration.
@@ -225,6 +227,7 @@
               <span>Cryptography</span>
             </div>
             <h3>ROMULUS Authenticated Encryption/Hash</h3>
+            <p class="project-date" aria-label="Project date">Fall 2021</p>
             <p>
               A cryptography project and demo centered on authenticated encryption, hashing,
               and secure implementation concepts.
@@ -264,6 +267,7 @@
               <span>Embedded sensor fusion</span>
             </div>
             <h3>Sensor Fusion Algorithms and Tracking for Autonomous Systems: Unmanned Ground Vehicle</h3>
+            <p class="project-date" aria-label="Project date">Fall 2022</p>
             <p>
               A systems engineering project focused on tracking, sensor fusion, and autonomous
               ground vehicle behavior.
@@ -304,6 +308,7 @@
               <span>Benchmarking</span>
             </div>
             <h3>Comparing the x86 to AMD Processor using SilverBench</h3>
+            <p class="project-date" aria-label="Project date">Spring 2023</p>
             <p>
               A performance comparison project exploring processor behavior, benchmarking
               methodology, and architecture-level tradeoffs.
@@ -343,6 +348,7 @@
               <span>SIEM</span>
             </div>
             <h3>Log Hacker Information Using Azure Sentinel</h3>
+            <p class="project-date" aria-label="Project date">Spring 2023</p>
             <p>
               A blue-team logging project using Azure Sentinel concepts to capture, organize,
               and analyze attacker-related security telemetry.
@@ -382,6 +388,7 @@
               <span>Python SIEM</span>
             </div>
             <h3>Python-Security Information and Event Management</h3>
+            <p class="project-date" aria-label="Project date">Summer 2025</p>
             <p>
               A Python-centered SIEM project that turns security log handling into a more
               automated detection and analysis workflow.
@@ -421,6 +428,7 @@
               <span>Encryption</span>
             </div>
             <h3>Hybrid Cryptography (RSA/AES)</h3>
+            <p class="project-date" aria-label="Project date">Spring 2026</p>
             <p>
               A secure communication project combining asymmetric and symmetric encryption
               concepts through an RSA/AES hybrid cryptography workflow.
@@ -460,6 +468,7 @@
               <span>SOC investigation</span>
             </div>
             <h3>Network Traffic Investigation — SOC Homelab</h3>
+            <p class="project-date" aria-label="Project date">Summer 2026</p>
             <p>
               A hands-on SOC investigation using Ubuntu and Windows virtual machines on a
               Mac-hosted Shared NAT network. Captured and analyzed network traffic, correlated
@@ -490,6 +499,52 @@
                 <li>Correlated authorized Nmap scans with TCP SYN probes in Wireshark; all 1,000 scanned Windows TCP ports returned filtered/no-response results.</li>
                 <li>Documented NAT visibility and encrypted-payload limitations without making unsupported claims of malicious activity.</li>
                 <li>In progress: controlled Windows application traffic, additional event correlation, and remaining process attribution.</li>
+              </ul>
+            </div>
+          </article>
+          <article
+            id="soc-homelab-2"
+            class="project-card reveal tilt-target"
+            data-category="cybersecurity"
+            data-keywords="soc homelab wazuh siem xdr endpoint monitoring alert investigation triage windows ubuntu authentication failed login event 4625 file integrity monitoring fim tcpdump packet correlation shared nat"
+          >
+            <div class="card-topline">
+              <span>Cybersecurity</span>
+              <span>SOC investigation</span>
+            </div>
+            <h3>Endpoint Monitoring &amp; Alert Investigation — SOC Homelab 2</h3>
+            <p class="project-date" aria-label="Project date">Fall 2026</p>
+            <p>
+              A hands-on SOC investigation using Wazuh to monitor Windows and Ubuntu endpoints
+              on a Mac-hosted Shared NAT network. Correlated a controlled failed login with its
+              alert, validated real-time file integrity monitoring, and documented agent transport
+              through packet captures.
+            </p>
+            <div class="tag-row" aria-label="Project skills">
+              <span>Wazuh</span>
+              <span>SIEM</span>
+              <span>Windows Security logs</span>
+              <span>File integrity monitoring</span>
+              <span>Alert triage</span>
+            </div>
+            <div class="project-actions">
+              <a class="button" href="assets/reports/soc-homelab-2.pdf" download>
+                <span aria-hidden="true">&darr;</span>
+                Download PDF
+              </a>
+              <a class="button" href="assets/reports/soc-homelab-2.pdf">View PDF</a>
+              <button class="details-toggle" type="button" aria-expanded="false" aria-controls="soc-homelab-2-details">
+                <span aria-hidden="true">+</span>
+                Details
+              </button>
+            </div>
+            <div class="project-details" id="soc-homelab-2-details">
+              <ul>
+                <li>Deployed the Wazuh manager, indexer, and dashboard on a dedicated Ubuntu server and enrolled Windows and Ubuntu endpoint agents.</li>
+                <li>Matched Windows Security Event ID 4625 to its Wazuh alert using the host, target account, record ID, and source timestamp.</li>
+                <li>Validated real-time file integrity alerts on both endpoints with controlled file changes and matching before-and-after hashes.</li>
+                <li>Captured agent communication on TCP port 1514 and correlated its timing with a repeated Ubuntu file-change test.</li>
+                <li>Closed the authentication investigation as expected lab activity and documented encrypted-payload visibility and Ubuntu assessment coverage limits.</li>
               </ul>
             </div>
           </article>
